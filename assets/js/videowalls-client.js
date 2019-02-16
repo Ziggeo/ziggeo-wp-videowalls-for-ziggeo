@@ -27,6 +27,11 @@
 	//This is to make sure that the walls is added to the ZiggeoWP object. Needed until the core plugin no longer has the videowall codes.
 	//When the system is loaded
 	jQuery(document).ready( function() {
+		//Sanity check - we do need the core Ziggeo plugin to be active
+		if(typeof ZiggeoWP === 'undefined') {
+			return false;
+		}
+
 		if(typeof ZiggeoWP.videowalls === 'undefined') {
 			ZiggeoWP.videowalls = {
 				//the array to hold all videowall
