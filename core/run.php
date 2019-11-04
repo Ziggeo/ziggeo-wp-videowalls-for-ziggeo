@@ -49,6 +49,12 @@ function videowallsz_run() {
 		return false;
 	}
 
+	//Videowalls will be part of 2.0 and removed in 2.2 version so at that time the plugin should run, otherwise it should not to avoid duplicate codes being executed
+	if(version_compare(ziggeo_get_version(), '2.0') === 0) {
+		//We want to show it as enabled on the integrations page
+		return true;
+	}
+
 	//Check current Ziggeo version
 	if( version_compare(ziggeo_get_version(), '2.0') >= 0 ) {
 		if(ziggeo_integration_is_enabled('videowalls-for-ziggeo')) {
@@ -65,7 +71,7 @@ function videowallsz_init() {
 
 	//The files that extend the core plugin
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/assets.php');
-	//include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/settings.php'); //@todo - include once the core no longer provides support natively
+	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/settings.php');
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/template_parser.php');
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/videowall_parser.php');
 

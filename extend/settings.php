@@ -255,4 +255,5 @@ add_action('ziggeo_templates_editor_advanced_parameters_section', function($sect
 	return $sections;
 });
 
+
 ?>

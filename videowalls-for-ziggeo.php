@@ -25,7 +25,9 @@ define('VIDEOWALLSZ_VERSION', '1.0');
 
 include_once(VIDEOWALLSZ_ROOT_PATH . 'admin/plugins.php');
 include_once(VIDEOWALLSZ_ROOT_PATH . 'admin/dashboard.php');
+include_once(VIDEOWALLSZ_ROOT_PATH . 'admin/validation.php');
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/assets.php');
+include_once(VIDEOWALLSZ_ROOT_PATH . 'core/helpers.php');
 
 //register
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/run.php');

@@ -14,9 +14,13 @@ if(!function_exists('videowallsz_videowall_parameter_values')) {
 
 		//First we are grabbing the parameters that can and probably will include spaces within them.
 
+		//When loaded from DB it will have double quote even if we saved it with asterisk...
+		$toParse = str_replace('"', "'", $toParse);
+
 		//VideoWall Title
 		if( ($t = stripos($toParse, ' title=')) > -1 ) {
 			//Lets get the title then
+			//title=\'wall title\'
 			$parsed['title'] = substr($toParse, $t+8, stripos($toParse, "'", $t+8) - ($t + 8));
 
 			//get parameters and values prior to title parameter

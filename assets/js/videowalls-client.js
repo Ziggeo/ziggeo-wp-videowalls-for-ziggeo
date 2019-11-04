@@ -95,10 +95,6 @@
 				wall.className = "ziggeo_videoWall " + wallClass;
 			}
 
-			if(ZiggeoWP.videowalls.walls[id].indexing.design == 'chessboard_grid') {
-				ziggeoDevReport('chessboard_grid videowall works best with r31 and higher as it requires popup parameter to be present');
-			}
-
 			//To show the page we must first index videos..
 			//We are making it get 100 videos data per call
 			var _index = ziggeo_app.videos.index( search_obj );
@@ -468,8 +464,6 @@
 
 				if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
 
-					tmp_embedding += ' ziggeo-popup';
-
 					tmp_embedding += ' ziggeo-width="' + _width + '"';
 				}
 				else if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
@@ -477,7 +471,7 @@
 					if(_mosaic_row_max === _mosaic_row_count) {
 						_mosaic_row_count = 0;
 					}
-					tmp_embedding += ' ziggeo-popup';
+
 					tmp_embedding += ' ziggeo-responsive';
 				}
 				else {

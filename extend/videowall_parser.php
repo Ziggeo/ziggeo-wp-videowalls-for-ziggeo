@@ -296,9 +296,6 @@ if(!function_exists('videowallsz_prep_parameters_videowall')) {
 
 	function videowallsz_prep_parameters_videowall($raw_parameters = null) {
 
-		//we know that we will need this file, so lets include it. Of course once it is in its own plugin, this will not be needed..
-		include_once( ZIGGEO_ROOT_PATH . 'parsers/videowall_parser.php'); //@HERE
-
 		if($raw_parameters === null) {
 			return '';
 		}
