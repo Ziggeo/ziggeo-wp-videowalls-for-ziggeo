@@ -1,0 +1,8 @@
+.ziggeo_dashboard_settings .form-table tr label {
+	opacity: 0;
+	transition-duration: 0.4s;
+	transition-property: opacity;
+}
+.ziggeo_dashboard_settings .form-table tr:hover label {
+	opacity: 1;
+}

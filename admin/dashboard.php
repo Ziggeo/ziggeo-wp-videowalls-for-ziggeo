@@ -78,7 +78,7 @@ defined('ABSPATH') or die();
 	//Dashboard form
 	function videowallsz_show_form() {
 		?>
-		<div>
+		<div class="ziggeo_dashboard_settings">
 			<h2>Ziggeo VideoWalls</h2>
 
 			<form action="options.php" method="post" enctype="multipart/form-data">
@@ -125,7 +125,7 @@ defined('ABSPATH') or die();
 					<option <?php echo ($options['global_design'] === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
 					<option <?php echo ($options['global_design'] === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
 				</select>
-				<label for="videowallsz_global_design"><?php _e('How many links should be shown when randomly setting them up?', 'videowallsz'); ?></label>
+				<label for="videowallsz_global_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
 				<?php
 			}
 
