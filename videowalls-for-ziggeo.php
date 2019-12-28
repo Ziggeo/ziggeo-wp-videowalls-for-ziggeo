@@ -16,7 +16,7 @@ defined('ABSPATH') or die();
 define('VIDEOWALLSZ_ROOT_PATH', plugin_dir_path(__FILE__) );
 
 //Setting up the URL so that we can get/built on it later on from the plugin root
-define('VIDEOWALLSZ_ROOT_URL', plugins_url() . '/videowalls-for-ziggeo/' );
+define('VIDEOWALLSZ_ROOT_URL', plugins_url('', __FILE__) . '/');
 
 //plugin version - this way other plugins can get it as well and we will be updating this file for each version change as is
 define('VIDEOWALLSZ_VERSION', '1.0');
