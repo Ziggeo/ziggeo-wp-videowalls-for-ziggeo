@@ -32,7 +32,4 @@ include_once(VIDEOWALLSZ_ROOT_PATH . 'core/helpers.php');
 //register
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/run.php');
 
-
-
-
 ?>

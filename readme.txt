@@ -1,4 +1,4 @@
-=== Ziggeo ===
+=== VideoWalls for Ziggeo ===
 Contributors: oliverfriedmann, baned, carloscsz409
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
@@ -131,7 +131,7 @@ There are several ways to power your WordPress with video recording and video pl
 *Q:* How can I request a feature?
 *A:* Leave a rating for our plugin. This helps dedicate more time on plugin improvements. Once that is done, leave a comment about your feature request on our [WP forum](https://support.ziggeo.com/hc/en-us/community/topics/200753347-WordPress-plugin). This will allow you and others to boost up the features that you like.
 
-*Q:* Why there are some videos that can not be loaded in VideoWall? =
+*Q:* Why there are some videos that can not be loaded in VideoWall?
 *A:* If you notice in your console the following error: `NetworkError: 403 Forbidden - link to video snapshot` or if you check the link directly and you see `This video is currently under moderation` it means that your video wall was able to load the video, however you have checked `Client cannot view unaccepted videos` in your dashboard - that is why you are shown the same.
 
 If you are still not sure about how to resolve that, just let us know.
