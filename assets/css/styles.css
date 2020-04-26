@@ -7,15 +7,15 @@
 
 INDEX:
 	1. General styles
+	2. Slidewall CSS
 	2. Chessboard grid CSS
 	3. Mosaic grid CSS
 
 */
 
 /*******************************************************************************/
-/* General styles */
+/* 1. GENERAL STYLES */
 /*******************************************************************************/
-
 
 	.ziggeo_videoWall {
 		background-color: beige; /* falback */
@@ -74,7 +74,13 @@ INDEX:
 		background-color: lime;
 		background-image: linear-gradient(210deg, green, lime);
 	}
-	/* Slide wall styles */
+
+
+
+
+/*******************************************************************************/
+/* 2. SLIDEWALL CSS */
+/*******************************************************************************/
 	.ziggeo-wall-slideWall .ziggeo_wallpage {
 		position: relative;
 	}
@@ -115,6 +121,16 @@ INDEX:
 		box-shadow: 3px 0 4px lightGray;
 	}
 
+
+
+
+/*******************************************************************************/
+/* 3. CHESSBOARD GRID CSS */
+/*******************************************************************************/
+
+	/*.ziggeo-wall-chessboardGrid ziggeoplayer {
+		width: calc( 100% / 8);
+	}*/
 	/* endless scroll chessboard grid implementation */
 	.ziggeo-wall-chessboardGrid ziggeo, .ziggeo-wall-mosaicGrid ziggeo {
 		display: inline-block;
@@ -131,18 +147,11 @@ INDEX:
 		clear:both;
 	}
 
-/*******************************************************************************/
-/* Chessboard grid CSS */
-/*******************************************************************************/
-
-	/*.ziggeo-wall-chessboardGrid ziggeoplayer {
-		width: calc( 100% / 8);
-	}*/
 
 
 
 /*******************************************************************************/
-/* Mosaic grid CSS */
+/* 4. MOSAIC GRID CSS */
 /*******************************************************************************/
 
 	.ziggeo-wall-mosaicGrid ziggeoplayer {

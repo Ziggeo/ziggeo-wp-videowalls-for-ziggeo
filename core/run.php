@@ -75,6 +75,9 @@ function videowallsz_init() {
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/template_parser.php');
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/videowall_parser.php');
 
+	//Know when Videowalls will definitely be activated and do any action you want/need
+	do_action('videowalls_for_ziggeo_running');
+
 	return true;
 }
 

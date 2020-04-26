@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 5.3.2
-Stable tag: 1.0
+Stable tag: 1.1
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -97,25 +97,30 @@ There are several ways to power your WordPress with video recording and video pl
 
 == Screenshots ==
 
-1. Style 1
-2. Style 2
-3. Style 3
-4. Style 4
+1. Paged wall
+2. Slidewall
+3. Gridwall
+4. Mosaic Wall
+5. Core plugin Template editor integration - videowall templates setup
 
 
 == FAQ ==
 
-*Q:* Does this plugin change Ziggeo core plugin
-*A:* No. We are using hooks (actions and filters) to hook into the Ziggeo core WP plugin. As such the changes are applied only while both plugins is running.
+= Does this plugin change Ziggeo core plugin =
 
-*Q:* What happens to videowall fields if integration is disabled at a later time?
+No. We are using hooks (actions and filters) to hook into the Ziggeo core WP plugin. As such the changes are applied only while both plugins is running.
+
+= What happens to videowall fields if integration is disabled at a later time? =
+
 *A:* If you disable the integration, you will be stopping it from working, and as such it would not show the walls any more. There might be some text output representing your videowall shortcode, however that depends on your setup.
 
-*Q:* Can we modify the videowalls or create new ones?
-*A:* Of course! Just let us know on our forum [under WordPress plugin topic](https://support.ziggeo.com/hc/en-us/community/topics/200753347-WordPress-plugin) and we would be happy to help you get started. We might already have some helpful tips on how to do the same as well.
+= Can we modify the videowalls or create new ones? =
 
-*Q:* I am just interested in changing few styles
-*A:* In that case all you need are few classes
+Of course! Just let us know on our forum [under WordPress plugin topic](https://support.ziggeo.com/hc/en-us/community/topics/200753347-WordPress-plugin) and we would be happy to help you get started. We might already have some helpful tips on how to do the same as well.
+
+= I am just interested in changing few styles =
+
+In that case all you need are few classes
 
 `.ziggeo_videoWall` - To style videowall template (video gallery if you prefer) 
 `.ziggeo_wall_title` - To style the wall title if any is given
@@ -125,22 +130,32 @@ There are several ways to power your WordPress with video recording and video pl
 `.ziggeo_videowall_slide_previous` - to style the < (previous arrow)
 `.ziggeo_videowall_slide_next` - to style > (next arrow)
 
-*Q:* Can we give you our feedback?
-*A:* Of course! We welcome all feedback and suggestions, that is how we got to here, so do share with us your thoughts.
+You can of course use your own CSS code, and with classes available for each element of the videowall this should be something very simple.
 
-*Q:* How can I request a feature?
-*A:* Leave a rating for our plugin. This helps dedicate more time on plugin improvements. Once that is done, leave a comment about your feature request on our [WP forum](https://support.ziggeo.com/hc/en-us/community/topics/200753347-WordPress-plugin). This will allow you and others to boost up the features that you like.
+= Can we give you our feedback? =
 
-*Q:* Why there are some videos that can not be loaded in VideoWall?
-*A:* If you notice in your console the following error: `NetworkError: 403 Forbidden - link to video snapshot` or if you check the link directly and you see `This video is currently under moderation` it means that your video wall was able to load the video, however you have checked `Client cannot view unaccepted videos` in your dashboard - that is why you are shown the same.
+Of course! We welcome all feedback and suggestions, that is how we got to here, so do share with us your thoughts.
+
+= How can I request a feature? =
+
+Leave a rating for our plugin. This helps dedicate more time on plugin improvements. Once that is done, leave a comment about your feature request on our [WP forum](https://support.ziggeo.com/hc/en-us/community/topics/200753347-WordPress-plugin). This will allow you and others to boost up the features that you like.
+
+= Why there are some videos that can not be loaded in VideoWall? =
+
+If you notice in your console the following error: `NetworkError: 403 Forbidden - link to video snapshot` or if you check the link directly and you see `This video is currently under moderation` it means that your video wall was able to load the video, however you have checked `Client cannot view unaccepted videos` in your dashboard - that is why you are shown the same.
 
 If you are still not sure about how to resolve that, just let us know.
 
-*Q:* We open a page with video wall, however no videos are shown even with video wall set to load right away
-*A:* To show videos you need to have videos on that specific page. This is done to allow you to show any videos from within your Ziggeo account that are specific to the post/page you are currently on. To show some videos, you can record your video in the post, or by recording it in the comments. All others that are added as video comments will be shown after new recording is made (to those that do it) or for all those that come to your page (depending on your setup).
+= We open a page with video wall, however no videos are shown even with video wall set to load right away =
+
+To show videos you need to have videos on that specific page. This is done to allow you to show any videos from within your Ziggeo account that are specific to the post/page you are currently on. To show some videos, you can record your video in the post, or by recording it in the comments. All others that are added as video comments will be shown after new recording is made (to those that do it) or for all those that come to your page (depending on your setup).
 
 You can also tag your videos in our dashboard with the ID of the page that you want them shown on and voila, refresh your browser and they should be there.
 
+== Upgrade notice ==
+
+= 1.1. =
+* Made some cleanup of code
 
 == Changelog ==
 
