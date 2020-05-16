@@ -2,7 +2,7 @@
 Contributors: oliverfriedmann, baned, carloscsz409
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 5.3.2
+Tested up to: 5.4.1
 Stable tag: 1.1
 Requires PHP: 5.2.4
 License: GPLv2 or later
@@ -72,6 +72,35 @@ This plugin introduces videowall tempalte into the Ziggeo WP Core plugin templat
 Videowall template base would look like so: `[ziggeovideowall]`
 
 Please check FAQ section for some of the questions related to the same.
+
+= Hooks =
+
+With Videosite Playlist template we have started introducing hooks into the videowalls plugin. Want to have more? Just let us know.
+
+To find the hooks, you can search our files (for those that like to make sure we told you all) for `ZiggeoWP.hooks.fire`.
+
+We have added the following hooks:
+1. videowalls_videosite_playlist_create_details ({ data: video_data details_element: element_reference })
+2. videowalls_videosite_playlist_goto (id)
+3. videowalls_videosite_main_player_pre_create
+4. videowalls_videosite_playlist_step_automated (short video info)
+
+
+You can set your code to react to hooks in the following manner:
+
+ZiggeoWP.hooks.set(hook_name, unique_identifier, function(data) {});
+
+This would look like so:
+
+```javascript
+ZiggeoWP.hooks.set('videowalls_videosite_playlist_create_details', 'ziggeo-details-extend', function(data) {
+	//here we show you how to show the video token in the description area
+	//You could do anything here, even add the details like you would see on YouTube under a video
+	var _c = document.createElement('div');
+	_c.innerHTML = data.data.token;
+	data.details_element.appendChild(_c);
+});
+```
 
 = Improvements and Feedback =
 
@@ -156,6 +185,9 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 = 1.1. =
 * Made some cleanup of code
+* Introducing YouTube like videowall "VideoSite Playlist"
+* Changed how the processing of videowalls is done on frontend and backend
+* Introduced a better way to handle defaults for videowalls
 
 == Changelog ==
 

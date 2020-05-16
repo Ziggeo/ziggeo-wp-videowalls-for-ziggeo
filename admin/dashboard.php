@@ -124,6 +124,7 @@ defined('ABSPATH') or die();
 					<option <?php echo ($options['global_design'] === 'show_pages')? 'selected="selected"' : ''; ?> value="show_pages">Show Pages</option>
 					<option <?php echo ($options['global_design'] === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
 					<option <?php echo ($options['global_design'] === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
+					<option <?php echo ($options['global_design'] === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
 				</select>
 				<label for="videowallsz_global_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
 				<?php

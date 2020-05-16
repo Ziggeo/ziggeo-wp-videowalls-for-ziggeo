@@ -27,28 +27,30 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 	// ------------------
 
 		$wall = videowallsz_videowall_parameter_values($template);
+		$wall = videowallsz_p_populate_template($wall);
+
 
 		//To set up the wall inline style
 		$wall_styles = '';
 
 		//It would not be possible to use pixels and percentages in the same time, so to avoid bad HTML and CSS code percentages will rule the pixels when both are set
-		if(!isset($wall['scalable_width']) && isset($wall['fixed_width'])) {
+		if($wall['scalable_width'] === '' && $wall['fixed_width'] !== '') {
 			$wall_styles .= 'width:' . trim($wall['fixed_width'], " \t\n\r\0\x0B".chr(0xC2).chr(0xA0)) . 'px;';
 		}
 
-		if(!isset($wall['scalable_height']) && isset($wall['fixed_height'])) {
+		if($wall['scalable_height'] === '' && $wall['fixed_height'] !== '') {
 			$wall_styles .= 'height:' . trim($wall['fixed_height'], " \t\n\r\0\x0B".chr(0xC2).chr(0xA0)) . 'px;';
 		}
 
-		if(isset($wall['scalable_width'])) {
+		if($wall['scalable_width'] !== '') {
 			$wall_styles .= 'width:' . trim($wall['scalable_width'], " \t\n\r\0\x0B".chr(0xC2).chr(0xA0)) . '%;';
 		}
 
-		if(isset($wall['scalable_height'])) {
+		if($wall['scalable_height'] !== '') {
 			$wall_styles .= 'height:' . trim($wall['scalable_height'], " \t\n\r\0\x0B".chr(0xC2).chr(0xA0)) . '%;';
 		}
 
-		if(isset($wall['show'])) {
+		if($wall['show'] === true) {
 			$wall_styles .= 'display:block;';
 		}
 		else {
@@ -61,7 +63,7 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$ret = $wall_structure['div_code_start'];
 
 		//Does wall have the title parameter set up?
-		if( isset($wall['title']) ) {
+		if($wall['title'] !== '' ) {
 			//Lets get the title then
 			$wall['title'] = '<div class="ziggeo_wall_title">' . $wall['title'] . '</div>';
 		}
@@ -74,79 +76,39 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		// parameters with different names that determine which design is used
 
 		//show_pages is default, so if slide_wall is set, it will be used over show_pages
-		if( isset($wall['slide_wall']) || ( isset($wall['wall_design']) && $wall['wall_design'] === 'slide_wall' ) ) {
-			$wall['slide_wall'] = true;
-
-			//we disable the rest
-			$wall['show_pages'] = false;
-			$wall['chessboard_grid'] = false;
-			$wall['mosaic_grid'] = false;
-			$wall['wall_design'] = 'slide_wall';
-
+		if( $wall['wall_design'] === 'slide_wall' ) {
 			//videos per page
-			if(!isset($wall['videos_per_page'])) { $wall['videos_per_page'] = 1; }
+			if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 1; }
 		}
-		elseif( isset($wall['chessboard_grid']) || ( isset($wall['wall_design']) && $wall['wall_design'] === 'chessboard_grid' ) ) {
-			$wall['chessboard_grid'] = true;
-
-			//we disable the rest
-			$wall['show_pages'] = false;
-			$wall['slide_wall'] = false;
-			$wall['mosaic_grid'] = false;
-			$wall['wall_design'] = 'chessboard_grid';
-
+		elseif( $wall['wall_design'] === 'chessboard_grid' ) {
 			 //videos per page
-			if(!isset($wall['videos_per_page'])) { $wall['videos_per_page'] = 20; }
+			if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 20; }
 		}
-		elseif( isset($wall['mosaic_grid']) || ( isset($wall['wall_design']) && $wall['wall_design'] === 'mosaic_grid' ) ) {
-			$wall['mosaic_grid'] = true;
-
-			//we disable the rest
-			$wall['show_pages'] = false;
-			$wall['slide_wall'] = false;
-			$wall['chessboard_grid'] = false;
-			$wall['wall_design'] = 'mosaic_grid';
-
+		elseif($wall['wall_design'] === 'mosaic_grid' ) {
 			//videos per page
-			if(!isset($wall['videos_per_page'])) { $wall['videos_per_page'] = 20; }
+			if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 20; }
+		 }
+		 elseif($wall['wall_design'] === 'videosite_playlist' ) {
+
+			if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 100; }
 		 }
 		 else {
-			$wall['show_pages'] = true;
-
-			//we disable the rest
-			$wall['slide_wall'] = false;
-			$wall['chessboard_grid'] = false;
-			$wall['mosaic_grid'] = false;
-			$wall['wall_design'] = 'show_pages';
-
-			//videos per page
-			if(!isset($wall['videos_per_page'])) { $wall['videos_per_page'] = 2; }
+			//Something seems off, raise notification
+			//@TODO: Add notification
 		 }
-
-		//getting the defaults:
-
-		//video width
-		if(!isset($wall['video_width'])) { $wall['video_width'] = 320; }
-
-		//video height
-		if(!isset($wall['video_height'])) { $wall['video_height'] = 240; }
 
 		//lets set the post ID since we will need to reference it as tag
 		$wall['postID'] = get_the_ID();
 
-		//what kind of videos to show - defaults to approved ones
-		if(!isset($wall['show_videos'])) { $wall['show_videos'] = 'approved'; }
-
-		if(!isset($wall['on_no_videos'])) { $wall['on_no_videos'] = 'showmessage'; }
-
 		//Is there a message set in of no videos? If not, we should make some:
-		if(!isset($wall['message'])) { $wall['message'] = 'Currently no videos found. We do suggest recording some first'; }
+		if($wall['message'] === '') {
+			$wall['message'] = 'Currently no videos found. We do suggest recording some first';
+		}
 
 		//We are parsing template only if it is set to be shown, otherwise there is no need for it.
 		if($wall['on_no_videos'] === 'showtemplate') {
 			//Did we set up a template to be loaded into the videowall if there are no videos?
-			if(!isset($wall['template_name'])) { $wall['template_name'] = ''; }
-			else {
+			if($wall['template_name'] !== '') {
 				$wall['template_name'] = ziggeo_p_template_params($wall['template_name']);
 
 				//template was not found lets use the defaults
@@ -159,9 +121,6 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 				}
 			}
 		}
-		else {
-			$wall['template_name'] = '';
-		}
 
 		//In case video wall should be hidden if empty
 		if($wall['on_no_videos'] === 'hidewall') {
@@ -173,13 +132,12 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 
 		$autoplaytype = '';
 
-		if(!isset($wall['autoplay']))   { $wall['autoplay'] = false; }
-		else {
+		if($wall['autoplay'] === true) {
 			//autoplay is set, so we check if any of the other 2 options are set as well:
-			if(isset($wall['autoplay-continue-end'])) {
+			if($wall['autoplay-continue-end'] === true) {
 				$autoplaytype = 'continue-end';
 			}
-			elseif(isset($wall['autoplay-continue-run'])) {
+			elseif($wall['autoplay-continue-run'] === true) {
 				$autoplaytype = 'continue-run';
 			}
 		}
@@ -201,18 +159,18 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		//We now allow customers to set custom tags to search videos by..This will provide them with more freedom.
 		// good to note that we should search using tags, by default, this is to fine tune the results that are matching the
 		// post ID tag.
-		if(!isset($wall['videos_to_show'])) {
+		$wall_tags = '';
+
+		if($wall['videos_to_show'] === false) { //it was not set..
 			$wall_tags = 'wordpress,comment,post_' . $wall['postID']; //default that shows the videos made in the comments of the specific post
-		}
-		else {
-			if($wall['videos_to_show'] === '"') { $wall['videos_to_show'] = ''; }
-			$wall_tags = $wall['videos_to_show'];
 		}
 
 		//added to allow the video wall to process videos of the current user without requiring the PHP code to run it
 		$wall_tags = str_ireplace( '%ZIGGEO_USER%', $c_user, $wall_tags );
+		//tags based on current page
+		$wall_tags = str_ireplace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
 
-		$wall['autoplay'] = ($wall['autoplay']) ? 'true' : 'false';
+		$wall['autoplay'] = ($wall['autoplay'] === true) ? 'true' : 'false';
 		$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';
 		$wall['hide_wall'] = ($wall['hide_wall']) ? 'true' : 'false';
 
@@ -230,13 +188,6 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 						perPage: ' . $wall['videos_per_page'] . ',
 						status: "' . $wall['show_videos'] . '",
 						design: "' . $wall['wall_design'] . '",';
-						/*
-							,
-							showPages: <?php echo ($wall['show_pages']) ? 'true' : 'false'; ?>,
-							slideWall: <?php echo ($wall['slide_wall']) ? 'true' : 'false'; ?>,
-							chessboardGrid: <?php echo ($wall['chessboard_grid']) ? 'true' : 'false'; ?>,
-							mosaicGrid: <?php echo ($wall['mosaic_grid']) ? 'true' : 'false'; ?>
-						*/
 			$ret .=		'
 						fresh: true
 					},

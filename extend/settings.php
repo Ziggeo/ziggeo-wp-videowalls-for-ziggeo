@@ -41,6 +41,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> ''
@@ -51,6 +52,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> ''
@@ -61,6 +63,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> ''
@@ -71,6 +74,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> ''
@@ -81,6 +85,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> ''
@@ -88,10 +93,11 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'wall_design' => array(
 			'type'					=> 'enum',
 			'description'			=> _x('This property allows you to change the initial design of your video wall. Default is show_pages', 'videowalls-for-ziggeo'),
-			'options'				=> array('show_pages', 'slide_wall', 'chessboard_grid', 'mosaic_grid'),
+			'options'				=> array('show_pages', 'slide_wall', 'chessboard_grid', 'mosaic_grid', 'videosite_playlist'),
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> 'show_pages'
@@ -102,6 +108,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> 2
@@ -112,6 +119,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> '%CURRENT_ID%'
@@ -122,9 +130,10 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> true,
 			'used_by_recorder'		=> true,
 			'used_by_rerecorder'	=> true,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
-			'default_value'			=> ''
+			'default_value'			=> '320'
 		),
 		'video_height' => array(
 			'type'					=> 'integer',
@@ -132,9 +141,10 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> true,
 			'used_by_recorder'		=> true,
 			'used_by_rerecorder'	=> true,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
-			'default_value'			=> ''
+			'default_value'			=> '240'
 		),
 		'on_no_videos' => array(
 			'type'					=> 'enum',
@@ -143,6 +153,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> 'showmessage'
@@ -153,6 +164,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> ''
@@ -163,6 +175,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> ''
@@ -174,6 +187,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> 'approved'
@@ -184,6 +198,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> true,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> false
@@ -194,6 +209,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> true,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> false
@@ -204,6 +220,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> true,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> false,
 			'default_value'			=> false
@@ -214,6 +231,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'used_by_player'		=> false,
 			'used_by_recorder'		=> false,
 			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> false
