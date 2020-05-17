@@ -130,7 +130,8 @@ There are several ways to power your WordPress with video recording and video pl
 2. Slidewall
 3. Gridwall
 4. Mosaic Wall
-5. Core plugin Template editor integration - videowall templates setup
+5. Videosite Playlist Wall
+6. Core plugin Template editor integration - videowall templates setup
 
 
 == FAQ ==
