@@ -6,16 +6,18 @@
 		"alternative_repo_url": "https://github.com/Ziggeo/ziggeo-wp-videowalls-for-ziggeo"
 	},
 	"plugin": {
+		"name": "videowalls-for-ziggeo",
+		"title": "VideoWalls for Ziggeo",
+		"version": "1.1",
+		"author": "Ziggeo",
+		"logo": "https://raw.githubusercontent.com/Ziggeo/ziggeo-wp-videowalls-for-ziggeo/master/assets/images/logo.png",
 		"contributors": "oliverfriedmann, baned, carloscsz409",
 		"tags": "video, ziggeo, videowall, playlist, video gallery",
-		"version": "1.1",
 		"description": "This plugin utilizes the power of Ziggeo to make it easy to share galleries and walls of videos on your website quickly and easily.",
 		"latest_update": "Added Videosite playlist wall design.",
 		"info_url": "https://raw.githubusercontent.com/Ziggeo/ziggeo-wp-videowalls-for-ziggeo/master/info.json",
 		"addon_url": "https://ziggeo.com/integrations/wordpress",
-		"logo": "https://raw.githubusercontent.com/Ziggeo/ziggeo-wp-videowalls-for-ziggeo/master/assets/images/logo.png",
-		"name": "videowalls-for-ziggeo",
-		"title": "VideoWalls for Ziggeo"
+		"docs_url": "https://ziggeo.com/docs/integrations/wordpress/videowalls"
 	},
 	"legal": {
 		"terms_of_use": "https://ziggeo.com/terms",
