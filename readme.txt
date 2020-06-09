@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 5.4.1
-Stable tag: 1.1
+Stable tag: 1.2
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,13 +184,16 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
+= 1.2. =
+* Fixed issue where tags were removed and not used in some cases, showing all videos instead of just some
+
+== Changelog ==
+
 = 1.1. =
 * Made some cleanup of code
 * Introducing YouTube like videowall "VideoSite Playlist"
 * Changed how the processing of videowalls is done on frontend and backend
 * Introduced a better way to handle defaults for videowalls
-
-== Changelog ==
 
 = 1.0 =
 * First version

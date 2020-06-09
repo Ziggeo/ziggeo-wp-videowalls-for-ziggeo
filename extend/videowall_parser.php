@@ -164,6 +164,9 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		if($wall['videos_to_show'] === false) { //it was not set..
 			$wall_tags = 'wordpress,comment,post_' . $wall['postID']; //default that shows the videos made in the comments of the specific post
 		}
+		else {
+			$wall_tags = $wall['videos_to_show'];
+		}
 
 		//added to allow the video wall to process videos of the current user without requiring the PHP code to run it
 		$wall_tags = str_ireplace( '%ZIGGEO_USER%', $c_user, $wall_tags );
