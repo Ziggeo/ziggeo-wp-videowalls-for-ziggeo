@@ -2,8 +2,8 @@
 Contributors: oliverfriedmann, baned, carloscsz409
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 5.4.1
-Stable tag: 1.2
+Tested up to: 5.4.2
+Stable tag: 1.3
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,10 +184,16 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
-= 1.2. =
-* Fixed issue where tags were removed and not used in some cases, showing all videos instead of just some
+= 1.3 =
+* Using new way to create the addon page through core plugin function calls
+* using the new way to add the integration info to core pages
+* Fixed the mosaic wall issue where videowall was not rendering properly
+* Fixed issue where endless walls would not be shown
 
 == Changelog ==
+
+= 1.2. =
+* Fixed issue where tags were removed and not used in some cases, showing all videos instead of just some
 
 = 1.1. =
 * Made some cleanup of code

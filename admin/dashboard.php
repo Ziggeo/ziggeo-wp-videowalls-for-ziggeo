@@ -58,15 +58,14 @@ defined('ABSPATH') or die();
 	});
 
 	add_action('admin_menu', function() {
-		add_submenu_page(
-			'ziggeo_video',					//parent slug
-			'VideoWalls for Ziggeo Video',	//page title
-			'VideoWalls for Ziggeo Video',	//menu title
-			'manage_options',				//min capability to view
-			'videowallsz',					//menu slug
-			'videowallsz_show_form'			//function
+		ziggeo_p_add_addon_submenu(array(
+			'page_title'	=> 'VideoWalls for Ziggeo Video',		//page title
+			'menu_title'	=> 'VideoWalls for Ziggeo Video',		//menu title
+			'capability'	=> 'manage_options',					//min capability to view
+			'slug'			=> 'videowallsz',						//menu slug
+			'callback'		=> 'videowallsz_show_form')				//function
 		);
-	});
+	}, 12);
 
 
 

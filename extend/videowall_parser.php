@@ -177,6 +177,9 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';
 		$wall['hide_wall'] = ($wall['hide_wall']) ? 'true' : 'false';
 
+		//closing videowall div
+		$ret .= $wall_structure['div_code_end'];
+
 		$ret .= '<script type="text/javascript" class="runMe">' .
 				//This helps us create js code that works as is and uses the variable data from these outputs instead of outputting the data into the code each time - and adding JS directly to the page.
 
@@ -243,9 +246,6 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 				});
 			</script>';
 		}
-
-		//closing videowall div
-		$ret .= $wall_structure['div_code_end'];
 
 		if($post_code === true) {
 			echo $ret;

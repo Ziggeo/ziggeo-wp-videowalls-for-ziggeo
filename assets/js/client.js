@@ -216,6 +216,8 @@
 
 			//We are currently not processing any videos (in video wall context)
 			ZiggeoWP.videowalls.walls[id].processing = false;
+
+			wall.style.display = 'block';
 		});
 
 		_index.error(function (args, error) {
@@ -582,6 +584,7 @@
 
 		//variable holding the current video (position) in the current row
 		var _mosaic_row_count = 0;
+		var _mosaic_rows = html.querySelectorAll('.mosaic_col');
 
 		for(i = 0, tmp=''; i < j; i++, tmp='', _mosaic_row_count++) {
 
@@ -602,7 +605,7 @@
 					_mosaic_row_count = 0;
 				}
 
-				tmp_embedding += ' ziggeo-responsive';
+				tmp_embedding += ' ziggeo-width="100%"';
 			}
 			else {
 				tmp_embedding += ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
@@ -626,7 +629,8 @@
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
 				//@ADD - sort option as bellow, this is just a quick test
 
-				html.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+				_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+				//html.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 				usedVideos++;
 				data[i] = null;//so that it is not used by other ifs..
 			}
@@ -663,6 +667,7 @@
 		if(data.length > 0) {
 			ZiggeoWP.videowalls.walls[id]['loaded_data'] = data;
 		}
+
 	}
 
 	//handler for the scroll event, so that we can do our stuff for the endless scroll templates
