@@ -186,6 +186,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 = 1.4 =
 * Changed the tags parsing for index calls so that it supports all of the tags supported by Ziggeo core plugin. This means you can now use `%USER_ID%`, `%USER_NAME_FIRST%`, `%USER_NAME_LAST%`, `%USER_NAME_FULL%`, `%USER_NAME_DISPLAY%`, `%USER_EMAIL%` and `%USER_USERNAME%` in your templates.
+* Added better way of handling the plugin options
 
 == Changelog ==
 

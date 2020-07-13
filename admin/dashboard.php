@@ -98,32 +98,24 @@ defined('ABSPATH') or die();
 		}
 
 			function videowallsz_o_enable_editor() {
-				$options = get_option('videowallsz');
-
-				if(!isset($options['enable_editor']) ) {
-					$options['enable_editor'] = '1';
-				}
+				$option = videowallsz_p_get_plugin_options('enable_editor');
 
 				?>
-				<input id="videowallsz_enable_editor" name="videowallsz[enable_editor]" size="50" type="checkbox" value="1" <?php echo checked( 1, $options['enable_editor'], false ); ?>/>
+				<input id="videowallsz_enable_editor" name="videowallsz[enable_editor]" size="50" type="checkbox" value="1" <?php echo checked( 1, $option, false ); ?>/>
 				<label for="videowallsz_enable_editor"><?php _e('When checked videowalls will be added to the templates editor', 'videowallsz'); ?></label>
 				<?php
 			}
 
 			function videowallsz_o_global_design() {
-				$options = get_option('videowallsz');
-
-				if(!isset($options['global_design']) ) {
-					$options['global_design'] = 'slide_wall';
-				}
+				$option = videowallsz_p_get_plugin_options('global_design');
 
 				?>
 				<select id="videowallsz_global_design" name="videowallsz[global_design]">
-					<option <?php echo ($options['global_design'] === 'slide_wall')? 'selected="selected"' : ''; ?> value="slide_wall">Slide Wall</option>
-					<option <?php echo ($options['global_design'] === 'show_pages')? 'selected="selected"' : ''; ?> value="show_pages">Show Pages</option>
-					<option <?php echo ($options['global_design'] === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
-					<option <?php echo ($options['global_design'] === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
-					<option <?php echo ($options['global_design'] === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
+					<option <?php echo ($option === 'slide_wall')? 'selected="selected"' : ''; ?> value="slide_wall">Slide Wall</option>
+					<option <?php echo ($option === 'show_pages')? 'selected="selected"' : ''; ?> value="show_pages">Show Pages</option>
+					<option <?php echo ($option === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
+					<option <?php echo ($option === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
+					<option <?php echo ($option === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
 				</select>
 				<label for="videowallsz_global_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
 				<?php

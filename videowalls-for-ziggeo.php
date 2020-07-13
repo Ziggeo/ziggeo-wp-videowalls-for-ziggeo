@@ -32,7 +32,6 @@ if(is_admin()) {
 
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/simplifiers.php');
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/assets.php');
-include_once(VIDEOWALLSZ_ROOT_PATH . 'core/helpers.php');
 
 //register
 include_once(VIDEOWALLSZ_ROOT_PATH . 'core/run.php');

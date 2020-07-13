@@ -2,7 +2,7 @@
 
 function videowallsz_validate($input) {
 
-	$options = get_option('videowallsz');
+	$options = videowallsz_p_get_plugin_options('videowallsz');
 
 	$allowed_options = array(
 		'enable_editor'		=> true,

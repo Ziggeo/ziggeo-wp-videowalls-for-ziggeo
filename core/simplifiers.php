@@ -42,6 +42,38 @@ function videowallsz_p_populate_template($template) {
 
 }
 
+function videowallsz_p_get_plugin_options_defaults() {
+	'enable_editor'
+
+}
+
+// Returns all plugin settings or defaults if not existing
+function videowallsz_p_get_plugin_options($specific = null) {
+	$options = get_option('videowallsz');
+
+	$defaults = videowallsz_p_get_plugin_options_defaults();
+
+	//in case we need to get the defaults
+	if($options === false || $options === '') {
+		// the defaults need to be applied
+		$options = $defaults;
+	}
+
+	// In case we are after a specific one.
+	if($specific !== null) {
+		if(isset($options[$specific])) {
+			return $options[$specific];
+		}
+		elseif(isset($defaults[$specific])) {
+			return $defaults[$specific];
+		}
+	}
+	else {
+		return $options;
+	}
+
+	return false;
+}
 
 
 ?>
