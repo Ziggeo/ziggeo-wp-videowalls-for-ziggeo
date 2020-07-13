@@ -173,6 +173,8 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		//tags based on current page
 		$wall_tags = str_ireplace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
 
+		$wall_tags = apply_filters('ziggeo_template_parsing_tag_set', $wall_tags, current_filter());
+
 		$wall['autoplay'] = ($wall['autoplay'] === true) ? 'true' : 'false';
 		$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';
 		$wall['hide_wall'] = ($wall['hide_wall']) ? 'true' : 'false';

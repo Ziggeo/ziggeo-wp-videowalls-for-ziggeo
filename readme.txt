@@ -184,13 +184,16 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
+= 1.4 =
+* Changed the tags parsing for index calls so that it supports all of the tags supported by Ziggeo core plugin. This means you can now use `%USER_ID%`, `%USER_NAME_FIRST%`, `%USER_NAME_LAST%`, `%USER_NAME_FULL%`, `%USER_NAME_DISPLAY%`, `%USER_EMAIL%` and `%USER_USERNAME%` in your templates.
+
+== Changelog ==
+
 = 1.3 =
 * Using new way to create the addon page through core plugin function calls
 * using the new way to add the integration info to core pages
 * Fixed the mosaic wall issue where videowall was not rendering properly
 * Fixed issue where endless walls would not be shown
-
-== Changelog ==
 
 = 1.2. =
 * Fixed issue where tags were removed and not used in some cases, showing all videos instead of just some
