@@ -43,8 +43,12 @@ function videowallsz_p_populate_template($template) {
 }
 
 function videowallsz_p_get_plugin_options_defaults() {
-	'enable_editor'
+	$defaults = array(
+		'enable_editor'			=> '1',
+		'global_design'			=> 'slide_wall'
+	);
 
+	return $defaults;
 }
 
 // Returns all plugin settings or defaults if not existing
