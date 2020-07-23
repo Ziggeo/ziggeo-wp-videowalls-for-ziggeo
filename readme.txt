@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 5.4.2
-Stable tag: 1.3
+Stable tag: 1.4
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -92,7 +92,7 @@ ZiggeoWP.hooks.set(hook_name, unique_identifier, function(data) {});
 
 This would look like so:
 
-```javascript
+`
 ZiggeoWP.hooks.set('videowalls_videosite_playlist_create_details', 'ziggeo-details-extend', function(data) {
 	//here we show you how to show the video token in the description area
 	//You could do anything here, even add the details like you would see on YouTube under a video
@@ -100,7 +100,7 @@ ZiggeoWP.hooks.set('videowalls_videosite_playlist_create_details', 'ziggeo-detai
 	_c.innerHTML = data.data.token;
 	data.details_element.appendChild(_c);
 });
-```
+`
 
 = Improvements and Feedback =
 
