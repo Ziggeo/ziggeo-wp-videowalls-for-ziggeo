@@ -271,4 +271,16 @@ function videowallsz_prep_parameters_videowall($raw_parameters = null) {
 	return $raw_parameters;
 }
 
+//Shortcode handling for Ziggeo Video Walls
+add_shortcode( 'ziggeovideowall', function($attrs) {
+
+	if(function_exists('ziggeo_p_shortcode_handler')) {
+		return ziggeo_p_shortcode_handler('[ziggeovideowall', $attrs);
+	}
+	else {
+		ziggeo_notification_create('ziggeovideowall shortcode was used, however looks like the Ziggeo core plugin is not yet up to date. Please update the Ziggeo core plugin.');
+	}
+
+});
+
 ?>

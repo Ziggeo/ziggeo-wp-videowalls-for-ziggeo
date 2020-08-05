@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 5.4.2
-Stable tag: 1.4
+Stable tag: 1.5
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,11 +184,15 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
+= 1.5 =
+* Updated info file to help showcasing addons in Addon store
+* Added Videowalls shortcode support
+
+== Changelog ==
+
 = 1.4 =
 * Changed the tags parsing for index calls so that it supports all of the tags supported by Ziggeo core plugin. This means you can now use `%USER_ID%`, `%USER_NAME_FIRST%`, `%USER_NAME_LAST%`, `%USER_NAME_FULL%`, `%USER_NAME_DISPLAY%`, `%USER_EMAIL%` and `%USER_USERNAME%` in your templates.
 * Added better way of handling the plugin options
-
-== Changelog ==
 
 = 1.3 =
 * Using new way to create the addon page through core plugin function calls
