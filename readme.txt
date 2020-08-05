@@ -92,7 +92,7 @@ ZiggeoWP.hooks.set(hook_name, unique_identifier, function(data) {});
 
 This would look like so:
 
-`
+[javascript]
 ZiggeoWP.hooks.set('videowalls_videosite_playlist_create_details', 'ziggeo-details-extend', function(data) {
 	//here we show you how to show the video token in the description area
 	//You could do anything here, even add the details like you would see on YouTube under a video
@@ -100,7 +100,7 @@ ZiggeoWP.hooks.set('videowalls_videosite_playlist_create_details', 'ziggeo-detai
 	_c.innerHTML = data.data.token;
 	data.details_element.appendChild(_c);
 });
-`
+[/javascript]
 
 = Improvements and Feedback =
 
