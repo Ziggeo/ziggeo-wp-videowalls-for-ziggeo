@@ -187,27 +187,8 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 = 1.5 =
 * Updated info file to help showcasing addons in Addon store
 * Added Videowalls shortcode support
+* Moved changelog into a separate file to help with short readme and useful changelog for those that want to check it out (look for CHANGELOG.md)
 
 == Changelog ==
 
-= 1.4 =
-* Changed the tags parsing for index calls so that it supports all of the tags supported by Ziggeo core plugin. This means you can now use `%USER_ID%`, `%USER_NAME_FIRST%`, `%USER_NAME_LAST%`, `%USER_NAME_FULL%`, `%USER_NAME_DISPLAY%`, `%USER_EMAIL%` and `%USER_USERNAME%` in your templates.
-* Added better way of handling the plugin options
-
-= 1.3 =
-* Using new way to create the addon page through core plugin function calls
-* using the new way to add the integration info to core pages
-* Fixed the mosaic wall issue where videowall was not rendering properly
-* Fixed issue where endless walls would not be shown
-
-= 1.2. =
-* Fixed issue where tags were removed and not used in some cases, showing all videos instead of just some
-
-= 1.1. =
-* Made some cleanup of code
-* Introducing YouTube like videowall "VideoSite Playlist"
-* Changed how the processing of videowalls is done on frontend and backend
-* Introduced a better way to handle defaults for videowalls
-
-= 1.0 =
-* First version
+Please check CHANGELOG.md found in the plugin files. This file will for now on contain all of the logs for past versions.
