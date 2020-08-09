@@ -35,39 +35,52 @@ function videowallsz_p_on_update($options = null) {
 	// 1.1
 	// Info: Change first version videowall parameters into new one since they make more sense ;)
 	if(version_compare($options['version'], '1.2', '<')) {
-		//Fix for template names
-		$templates = ziggeo_p_templates_index();
 
-		if(is_array($templates)) {
-			//All is good, lets do it
-			foreach ($templates as $template_id => $code) {
+		if(function_exists('ziggeo_get_version')) {
+			//Fix for template names
+			$templates = ziggeo_p_templates_index();
 
-				if(stripos($code, '[videowall ') > -1) {
+			if(is_array($templates)) {
+				//All is good, lets do it
+				foreach ($templates as $template_id => $code) {
 
-					if(stripos($code, 'wall_design') === false) {
-						if(stripos($code, 'mosaic_grid') > -1) {
-							$code = str_ireplace('mosaic_grid', 'wall_design=\'mosaic_grid\'', $code);
-						}
-						elseif(stripos($code, 'show_pages') > -1) {
-							$code = str_ireplace('show_pages', 'wall_design=\'show_pages\'', $code);
-						}
-						elseif(stripos($code, 'slide_wall') > -1) {
-							$code = str_ireplace('slide_wall', 'wall_design=\'slide_wall\'', $code);
-						}
-						elseif(stripos($code, 'chessboard_grid') > -1) {
-							$code = str_ireplace('chessboard_grid', 'wall_design=\'chessboard_grid\'', $code);
+					if(stripos($code, '[videowall ') > -1) {
+
+						if(stripos($code, 'wall_design') === false) {
+							if(stripos($code, 'mosaic_grid') > -1) {
+								$code = str_ireplace('mosaic_grid', 'wall_design=\'mosaic_grid\'', $code);
+							}
+							elseif(stripos($code, 'show_pages') > -1) {
+								$code = str_ireplace('show_pages', 'wall_design=\'show_pages\'', $code);
+							}
+							elseif(stripos($code, 'slide_wall') > -1) {
+								$code = str_ireplace('slide_wall', 'wall_design=\'slide_wall\'', $code);
+							}
+							elseif(stripos($code, 'chessboard_grid') > -1) {
+								$code = str_ireplace('chessboard_grid', 'wall_design=\'chessboard_grid\'', $code);
+							}
+
+							$templates[$template_id] = $code;
 						}
 
-						$templates[$template_id] = $code;
 					}
 
 				}
-
 			}
+
+			//Save templates
+			ziggeo_p_templates_add_all($templates);
+		}
+		else {
+			add_action( 'admin_notices', function() {
+				?>
+				<div class="error notice">
+					<p><?php _e( 'Please install <a href="https://wordpress.org/plugins/ziggeo/">Ziggeo plugin</a>. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowallsz' ); ?></p>
+				</div>
+  				<?php
+			});
 		}
 
-		//Save templates
-		ziggeo_p_templates_add_all($templates);
 	}
 
 	//In the end we also update the version

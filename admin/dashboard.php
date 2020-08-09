@@ -58,13 +58,28 @@ defined('ABSPATH') or die();
 	});
 
 	add_action('admin_menu', function() {
-		ziggeo_p_add_addon_submenu(array(
-			'page_title'	=> 'VideoWalls for Ziggeo Video',		//page title
-			'menu_title'	=> 'VideoWalls for Ziggeo Video',		//menu title
-			'capability'	=> 'manage_options',					//min capability to view
-			'slug'			=> 'videowallsz',						//menu slug
-			'callback'		=> 'videowallsz_show_form')				//function
-		);
+
+		if(function_exists('ziggeo_p_add_addon_submenu')) {
+			ziggeo_p_add_addon_submenu(array(
+				'page_title'	=> 'VideoWalls for Ziggeo Video',		//page title
+				'menu_title'	=> 'VideoWalls for Ziggeo Video',		//menu title
+				'capability'	=> 'manage_options',					//min capability to view
+				'slug'			=> 'videowallsz',						//menu slug
+				'callback'		=> 'videowallsz_show_form')				//function
+			);
+		}
+		else {
+			add_action( 'admin_notices', function() {
+
+				?>
+				<div class="error notice">
+					<p><?php _e( 'Please install <a href="https://wordpress.org/plugins/ziggeo/">Ziggeo plugin</a>. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowallsz' ); ?></p>
+				</div>
+  				<?php
+			});
+		}
+
+
 	}, 12);
 
 

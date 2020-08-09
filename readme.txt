@@ -188,6 +188,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 * Updated info file to help showcasing addons in Addon store
 * Added Videowalls shortcode support
 * Moved changelog into a separate file to help with short readme and useful changelog for those that want to check it out (look for CHANGELOG.md)
+* Added a check for core plugin being installed, just to avoid cases where it is not active or installed before the videowall plugin is and possibly causing inconvenience.
 
 == Changelog ==
 
