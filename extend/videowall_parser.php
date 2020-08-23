@@ -172,7 +172,6 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$wall_tags = str_ireplace( '%ZIGGEO_USER%', $c_user, $wall_tags );
 		//tags based on current page
 		$wall_tags = str_ireplace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
-
 		$wall_tags = apply_filters('ziggeo_template_parsing_tag_set', $wall_tags, current_filter());
 
 		$wall['autoplay'] = ($wall['autoplay'] === true) ? 'true' : 'false';

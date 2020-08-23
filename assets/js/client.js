@@ -47,6 +47,179 @@
 				endless: ''
 			};
 		}
+
+		//Hook to help us set up the class for video wall. This is only done when wall is built first time
+		ZiggeoWP.hooks.set('videowallsz_fresh_wall', 'videowallszUIHandleFreshWall',
+			function(data) {
+				var wall_class = 'ziggeo-wall';
+
+				switch(ZiggeoWP.videowalls.walls[data.wall_id].indexing.design) {
+					case 'show_pages': {
+						wall_class += '-showPages';
+						break;
+					}
+					case 'slide_wall': {
+						wall_class += '-slideWall';
+
+						break;
+					}
+					case 'chessboard_grid': {
+						wall_class += '-chessboardGrid';
+
+						break;
+					}
+					case 'mosaic_grid': {
+						wall_class += '-mosaicGrid';
+						break;
+					}
+					case 'videosite_playlist': {
+						wall_class += '-VideoSitePlaylist';
+						break;
+					}
+				}
+
+				data.wall_element.className = "ziggeo_videoWall " + wall_class;
+			}
+		);
+
+		ZiggeoWP.hooks.set('videowallsz_wall_request_made', 'videowallsUIHandleAutoplaySetup', 
+			function(data) {
+				if(ZiggeoWP.videowalls.autoplay_set) {
+					return false;
+				}
+
+				//Autoplay is something we set up on a global plan, and we only really need to do it once.
+				videowallszUISetupAutoplay(data);
+				ZiggeoWP.videowalls.autoplay_set = true; //We only set it once, so we should know that we did.
+			}
+		);
+
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParsePagedWalls',
+			function(data) {
+
+				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
+
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				if(current_wall.indexing.design == 'show_pages' || current_wall.indexing.design == 'slide_wall') {
+
+					//HTML output buffer
+					var html = '';
+
+					//set the video wall title
+					html += current_wall.title;
+
+					videowallszUIVideoWallPagedAddVideos(data.wall_element, data.wall_id, html, data.data);
+				}
+			}
+		);
+
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseEndlessWalls',
+			function(data) {
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
+
+				if(current_wall.indexing.design === 'show_pages' ||
+				   current_wall.indexing.design === 'slide_wall' ||
+				   current_wall.indexing.design === 'videosite_playlist') {
+					return false;
+				}
+
+				//lets attach the event listener..
+				if(!ZiggeoWP.videowalls.onscroll_set) {
+					//We should do this only once
+					window.addEventListener( 'scroll',  videowallszUIVideoWallEndlessOnScroll, false );
+				}
+
+				if( current_wall['continueFrom'] ) {
+					current_wall['continueFrom'] += data.data.length;
+				}
+				else {
+					current_wall['continueFrom'] = data.data.length;
+				}
+
+				ZiggeoWP.videowalls.onscroll_set = true;
+				videowallszUIVideoWallEndlessAddVideos(data.wall_element, data.wall_id, data.data, true);
+			}
+		);
+
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseVideositePlaylist',
+			function(data) {
+
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
+
+				if(current_wall.indexing.design === 'videosite_playlist') {
+					videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data);
+				}
+			}
+		);
+
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseNoVideos',
+			function(data) {
+				if(data.data.length > 0) {
+					return false;
+				}
+
+				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
+
+				if(current_wall.indexing.fresh === false) {
+					//We had some videos already..
+					var tmp = document.getElementById('ziggeo-endless-loading_more');
+
+					if(tmp) {
+						tmp.innerHTML = "No more videos..";
+					}
+				}
+				else {
+					//This is the first request
+					//follow the procedure for no videos (on no videos)
+					ziggeoDevReport('No videos found matching the requested: ' + JSON.stringify(data.search_parameters));
+
+					//Lets process no videos which will return false or built HTML code.
+					var html = videowallszUIVideoWallNoVideos(data.wall_id, current_wall.title);
+				}
+
+				//cancel the scrolling event when we have no more videos to load..
+				if(ZiggeoWP.videowalls.endless === data.wall_id) {
+					ZiggeoWP.videowalls.endless = null;
+				}
+
+				//function returns false if it should break out from the possition call was made.
+				if(html === false) { return false; }
+
+				if(current_wall.indexing.fresh === true) {
+					data.wall_element.innerHTML = html;
+				}
+			}, 0
+		);
+
+		/*
+		//The following are two examples how you can change the template of the video player when videos are not found
+		// as well as to change the message that is shown
+		ZiggeoWP.hooks.set('videowallsz_no_videos_template', 'videowallsNoVideosTemplate', function(info) {
+			info.templateName = 'ziggeo-parameter="some value"';
+		});
+		ZiggeoWP.hooks.set('videowallsz_no_videos_message', 'videowallsNoVideosTemplate', function(info) {
+			info.message = 'This is an example how your hook can change the text'
+		});
+		*/
+
+		/*
+		//Example how you could change the template for the player
+		ZiggeoWP.hooks.set('videowallsz_wall_video_add', 'videowallsEndlessWallVideoTemplate', function(codes) {
+			codes.player = 'ziggeo-theme="red"';
+		});
+		*/
+
 	});
 
 
@@ -59,65 +232,66 @@
 	//in case there are multiple walls on the same page, we want to be sure not to cause issues.
 	// This should catch it and not declare the function again.
 	//show video wall based on its ID
-	function videowallszUIVideoWallShow(id, searchParams) {
+	function videowallszUIVideoWallShow(id, search_params) {
 
-		if(searchParams === undefined || searchParams === "undefined" || searchParams === null || 
-			typeof(searchParams) != "object") {
-			searchParams = {};
+		if(search_params === undefined || search_params === "undefined" || search_params === null || 
+			typeof(search_params) != "object") {
+			search_params = {};
 		}
 
 		var search_obj = {
 			limit: 100,
 			tags: (ZiggeoWP.videowalls.walls[id].tags) ? ZiggeoWP.videowalls.walls[id].tags : "",
-			skip: (searchParams.skip) ? searchParams.skip : 0,
+			skip: (search_params.skip) ? search_params.skip : 0,
 			approved: ZiggeoWP.videowalls.walls[id].status
 		}
 
 		//reference to wall
 		var wall = document.getElementById(id);
 
+		//For the cases when you want to add some JS only if a videowall is being made.
+		ZiggeoWP.hooks.fire('videowallsz_wall_request_made', {
+			wall_id: id,
+			wall_element: wall,
+			search_parameters: search_params,
+			status: 'wall_might_be_created'
+		});
+
 		//lets check if wall is existing or not. If not, we break out and report it.
 		if(!wall) {
 			ziggeoDevReport('Exiting function. Specified wall is not present');
+
+			ZiggeoWP.hooks.fire('videowallsz_wall_not_found', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				status: 'no_wall_element_found'
+			});
+
 			return false;
 		}
 
 		if(!ZiggeoWP.videowalls.walls[id]) {
-			ziggeoDevReport('Wall found, however no data found for the same');
+			ziggeoDevReport('Incorrect wall reference.');
+
+			ZiggeoWP.hooks.fire('videowallsz_wall_invalid_reference', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				status: 'no_wall_data_found'
+			});
+
 			return false;
 		}
 
 		if(ZiggeoWP.videowalls.walls[id].indexing.fresh === true) {
 			//a fresh wall
-
-			var wallClass = 'ziggeo-wall';
-
-			switch(ZiggeoWP.videowalls.walls[id].indexing.design) {
-				case 'show_pages': {
-					wallClass += '-showPages';
-					break;
-				}
-				case 'slide_wall': {
-					wallClass += '-slideWall';
-
-					break;
-				}
-				case 'chessboard_grid': {
-					wallClass += '-chessboardGrid';
-
-					break;
-				}
-				case 'mosaic_grid': {
-					wallClass += '-mosaicGrid';
-					break;
-				}
-				case 'videosite_playlist': {
-					wallClass += '-VideoSitePlaylist';
-					break;
-				}
-			}
-
-			wall.className = "ziggeo_videoWall " + wallClass;
+			ZiggeoWP.hooks.fire('videowallsz_fresh_wall', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				status: 'first_time_build'
+			});
 		}
 
 		//To show the page we must first index videos..
@@ -138,78 +312,14 @@
 			}
 			//Else it is all and we do not need to filter anything (status: "all")
 
-			if(data.length > 0) {
-				//we got some videos back
-				//go through videos
-
-				//Lets set up the autoplay if it should be set
-				if(ZiggeoWP.videowalls.walls[id].videos.autoplay === true) {
-					videowallszUISetupAutoplay(id);
-				}
-
-				//if showPages or slideWall are true, then we use the original walls with pages
-				if(ZiggeoWP.videowalls.walls[id].indexing.design == 'show_pages' ||
-					ZiggeoWP.videowalls.walls[id].indexing.design == 'slide_wall') {
-
-					//HTML output buffer
-					var html = '';
-
-					//set the video wall title
-					html += ZiggeoWP.videowalls.walls[id].title;
-
-					videowallszUIVideoWallPagedAddVideos(wall, id, html, data);
-				}
-				//Are we trying to create a Youtube like playlist?
-				else if(ZiggeoWP.videowalls.walls[id].indexing.design == 'videosite_playlist') {
-					videowallszUIVideoSitePlaylistCreate(wall, id, data);
-				}
-				//if we are here, then this is one of the newer walls with endless scroll..
-				else {
-					//lets attach the event listener..
-					window.addEventListener( 'scroll',  videowallszUIVideoWallEndlessOnScroll, false );
-
-					if( ZiggeoWP.videowalls.walls[id]['continueFrom'] ) {
-						ZiggeoWP.videowalls.walls[id]['continueFrom'] += data.length;
-					}
-					else {
-						ZiggeoWP.videowalls.walls[id]['continueFrom'] = data.length;
-					}
-
-					videowallszUIVideoWallEndlessAddVideos(wall, id, data, true);
-				}
-			}
-			else {
-				//no results
-
-				if(ZiggeoWP.videowalls.walls[id].indexing.fresh === false) {
-					//We had some videos already..
-					var tmp = document.getElementById('ziggeo-endless-loading_more');
-
-					if(tmp) {
-						tmp.innerHTML = "No more videos..";
-					}
-				}
-				else {
-					//This is the first request
-					//follow the procedure for no videos (on no videos)
-					ziggeoDevReport('No videos found matching the requested: ' + JSON.stringify(search_obj));
-
-					//Lets process no videos which will return false or built HTML code.
-					var html = videowallszUIVideoWallNoVideos(id, ZiggeoWP.videowalls.walls[id].title);
-				}
-
-				//cancel the scrolling event when we have no more videos to load..
-				if(ZiggeoWP.videowalls.endless === id) {
-					ZiggeoWP.videowalls.endless = null;
-				}
-
-				//function returns false if it should break out from the possition call was made.
-				if(html === false) { return false; }
-
-				if(ZiggeoWP.videowalls.walls[id].indexing.fresh === true) {
-					wall.innerHTML = html;
-				}
-			}
+			//Now raising the notification about the video data being ready
+			ZiggeoWP.hooks.fire('videowallsz_wall_index_data_start', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				data: data,
+				status: 'about_to_process_data'
+			});
 
 			//The videowall is no longer fresh, so all initial actions should no longer be caried out..
 			ZiggeoWP.videowalls.walls[id].indexing.fresh = false;
@@ -218,10 +328,25 @@
 			ZiggeoWP.videowalls.walls[id].processing = false;
 
 			wall.style.display = 'block';
+
+			ZiggeoWP.hooks.fire('videowallsz_wall_index_data_finished', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				data: data,
+				status: 'videowall_is_processed'
+			});
 		});
 
 		_index.error(function (args, error) {
 			ziggeoDevReport('This was the error that we got back when searching for ' + JSON.stringify(args) +  ':' + error, 'error');
+
+			ZiggeoWP.hooks.fire('videowallsz_wall_index_error', {
+				wall_id: id,
+				wall_element: wall,
+				search_parameters: search_params,
+				status: 'index_error_happened'
+			});
 		});
 	}
 
@@ -229,8 +354,10 @@
 	// (not to be mistaken with 'video status').
 	function videowallszUIVideoWallNoVideos(id, html) {
 
+		var current_wall = ZiggeoWP.videowalls.walls[id];
+
 		//Is the vall set up to be hidden when there are no videos?
-		if(ZiggeoWP.videowalls.walls[id].onNoVideos.hideWall) {
+		if(current_wall.onNoVideos.hideWall) {
 			//Lets still leave a note about it in console.
 			ziggeoDevReport('VideoWall is hidden');
 			return false;
@@ -238,13 +365,19 @@
 
 		//adding page - has additional (empty) class to allow nicer styling
 		html += '<div id="' + id + '_page_1' + '" class="ziggeo_wallpage empty">';
+		var info = current_wall.onNoVideos;
 
 		//Should we show some template?
-		if(ZiggeoWP.videowalls.walls[id].onNoVideos.showTemplate) {
-			html += '<ziggeoplayer ' + ZiggeoWP.videowalls.walls[id].onNoVideos.templateName + '></ziggeoplayer>';
+		if(current_wall.onNoVideos.showTemplate) {
+
+			ZiggeoWP.hooks.fire('videowallsz_no_videos_template', info);
+
+			html += '<ziggeoplayer ' + info.templateName + '></ziggeoplayer>';
 		}
 		else { //or a message instead?
-			html += ZiggeoWP.videowalls.walls[id].onNoVideos.message;
+			ZiggeoWP.hooks.fire('videowallsz_no_videos_message', info);
+
+			html += current_wall.onNoVideos.message;
 		}
 		//closing the page.
 		html += '</div>';
@@ -254,7 +387,7 @@
 
 	//Sets up the events so that we can handle the autoplay in videowalls by utilizing app wide embedding events
 	//It does not create the wall, so it does not depend on a specific videowall
-	function videowallszUISetupAutoplay(wall_id) {
+	function videowallszUISetupAutoplay(data) {
 
 		//We need to make sure that autoplay either:
 		//1. always goes from one played video to the next regardless if some video is played manually
@@ -262,85 +395,107 @@
 		//3. should check right at start if the autoplay is even allowed there..
 		//* otherwise you would be starting an autoplay of next video every time you click to play one
 
-		if(ZiggeoWP.videowalls.walls[wall_id].videos.autoplay === true) {
-			//Lets see when the video stops playing
-			ziggeo_app.embed_events.on('ended', function (embedding) {
 
-				//current player
-				var current_player_ref = embedding.element()[0].parentElement;
+		//Lets see when the video stops playing
+		ziggeo_app.embed_events.on('ended', function (embedding) {
 
-				//current wall that player is part of
-				var current_wall_ref = current_player_ref.closest(".ziggeo_videoWall");
+			//current player
+			var current_player_ref = embedding.element()[0].parentElement;
 
-				//If we are not part of the videowall we just exit
-				if(current_wall_ref === null || typeof current_wall_ref === 'undefined') {
-					return false;
-				}
+			//current wall that player is part of
+			var current_wall_ref = current_player_ref.closest(".ziggeo_videoWall");
 
-				//If the video ID does not exist for some reason or the autoplay is turned off, exit
-				if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
-					ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
-					return false;
-				}
+			//If we are not part of the videowall we just exit
+			if(current_wall_ref === null || typeof current_wall_ref === 'undefined') {
+				return false;
+			}
 
-				//Get the current wall reference
-				var current_wall = ZiggeoWP.videowalls.walls[current_wall_ref.id];
+			//If the video ID does not exist for some reason or the autoplay is turned off, exit
+			if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
+				ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
+				return false;
+			}
 
-				//Sanity check - is this the player from which we should continue
-				if(ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player &&
-					ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player !== embedding) {
-					return false;
-				}
+			//Get the current wall reference
+			var current_wall = ZiggeoWP.videowalls.walls[current_wall_ref.id];
 
-				//Find next video player
-				//There are different designs. Each design requires different approach.
-				var next_player = null;
+			//Sanity check - is this the player from which we should continue
+			if(ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player &&
+				ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player !== embedding) {
+				return false;
+			}
 
-				//This will work for 'Mosaic Grid' and 'Chessboard Grid' designs as well as for videos on same page on 'Show Pages' design
-				if(current_player_ref.nextElementSibling &&
-					current_player_ref.nextElementSibling.tagName === 'ZIGGEOPLAYER') {
+			//Find next video player
+			//There are different designs. Each design requires different approach.
+			var next_player = null;
 
-					next_player = ZiggeoApi.V2.Player.findByElement( current_player_ref.nextElementSibling );
-					next_player.play();
-					return true;
+			//This will work for 'Mosaic Grid' and 'Chessboard Grid' designs as well as for videos on same page on 'Show Pages' design
+			if(current_player_ref.nextElementSibling &&
+				current_player_ref.nextElementSibling.tagName === 'ZIGGEOPLAYER') {
 
-				}
-				else {
+				next_player = ZiggeoApi.V2.Player.findByElement( current_player_ref.nextElementSibling );
+				next_player.play();
+				return true;
 
-					if(current_wall.indexing.design === 'show_pages' ) {
-						if(current_player_ref.parentElement.id.indexOf('_page_') > -1) {
+			}
+			else {
 
-							var _num = ((current_player_ref.parentElement.id.replace(current_wall_ref.id + '_page_', '') *1) + 1);
+				if(current_wall.indexing.design === 'show_pages' ) {
+					if(current_player_ref.parentElement.id.indexOf('_page_') > -1) {
 
-							if(document.getElementById(current_wall_ref.id + '_page_' + _num)) {
-								//Switch the page
-								videowallszUIVideoWallPagedShowPage(current_wall_ref.id, _num);
+						var _num = ((current_player_ref.parentElement.id.replace(current_wall_ref.id + '_page_', '') *1) + 1);
 
-								//find and play the video
-								next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.nextElementSibling.children[0]);
+						if(document.getElementById(current_wall_ref.id + '_page_' + _num)) {
+							//Switch the page
+							videowallszUIVideoWallPagedShowPage(current_wall_ref.id, _num);
+
+							//find and play the video
+							next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.nextElementSibling.children[0]);
+							next_player.play();
+							return true;
+						}
+						else {
+							if(current_wall.videos.autoplaytype === 'continue-run') {
+								//Go back to first page
+								videowallszUIVideoWallPagedShowPage(current_wall_ref.id, 1);
+
+								//Find and play the video
+								next_player = ZiggeoApi.V2.Player.findByElement(document.getElementById( current_wall_ref.id + '_page_1').children[0]);
 								next_player.play();
 								return true;
 							}
-							else {
-								if(current_wall.videos.autoplaytype === 'continue-run') {
-									//Go back to first page
-									videowallszUIVideoWallPagedShowPage(current_wall_ref.id, 1);
-
-									//Find and play the video
-									next_player = ZiggeoApi.V2.Player.findByElement(document.getElementById( current_wall_ref.id + '_page_1').children[0]);
-									next_player.play();
-									return true;
-								}
-							}
-
 						}
+
 					}
-					else if(current_wall.indexing.design === 'slide_wall') {
-						if(current_player_ref.parentElement.nextElementSibling) {
-							current_player_ref.parentElement.nextElementSibling.style.display = 'block';
+				}
+				else if(current_wall.indexing.design === 'slide_wall') {
+					if(current_player_ref.parentElement.nextElementSibling) {
+						current_player_ref.parentElement.nextElementSibling.style.display = 'block';
+						current_player_ref.parentElement.style.display = 'none';
+
+						var _next = current_player_ref.parentElement.nextElementSibling.children;
+
+						if(_next[0] && _next[0].tagName === 'ZIGGEOPLAYER') {
+							_next = _next[0];
+						}
+						else if(_next[1] && _next[1].tagName === 'ZIGGEOPLAYER') {
+							_next = _next[1];
+						}
+						else {
+							return false;
+						}
+
+						next_player = ZiggeoApi.V2.Player.findByElement(_next);
+						next_player.play();
+						return true;
+					}
+					else {
+						if(current_wall.videos.autoplaytype === 'continue-run') {
+
+							document.getElementById(current_wall_ref.id + '_page_1').style.display = 'block';
 							current_player_ref.parentElement.style.display = 'none';
 
-							var _next = current_player_ref.parentElement.nextElementSibling.children;
+							var _next = document.getElementById(current_wall_ref.id + '_page_1').children;
 
 							if(_next[0] && _next[0].tagName === 'ZIGGEOPLAYER') {
 								_next = _next[0];
@@ -356,80 +511,54 @@
 							next_player.play();
 							return true;
 						}
-						else {
-							if(current_wall.videos.autoplaytype === 'continue-run') {
-
-								document.getElementById(current_wall_ref.id + '_page_1').style.display = 'block';
-								current_player_ref.parentElement.style.display = 'none';
-
-								var _next = document.getElementById(current_wall_ref.id + '_page_1').children;
-
-								if(_next[0] && _next[0].tagName === 'ZIGGEOPLAYER') {
-									_next = _next[0];
-								}
-								else if(_next[1] && _next[1].tagName === 'ZIGGEOPLAYER') {
-									_next = _next[1];
-								}
-								else {
-									return false;
-								}
-
-								next_player = ZiggeoApi.V2.Player.findByElement(_next);
-								next_player.play();
-								return true;
-							}
-						}
 					}
-					else if(current_wall.indexing.design === 'mosaic_grid') {
-						if(current_player_ref.parentElement.nextElementSibling) {
-							next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.nextElementSibling.children[0]);
-							next_player.play();
-							return true;
-						}
-						else {
-							if(current_wall.videos.autoplaytype === 'continue-run') {
-								next_player = ZiggeoApi.V2.Player.findByElement(current_wall_ref.getElementsByClassName('mosaic_col')[0].children[0]);
-								next_player.play();
-								return true;
-							}
-						}
+				}
+				else if(current_wall.indexing.design === 'mosaic_grid') {
+					if(current_player_ref.parentElement.nextElementSibling) {
+						next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.nextElementSibling.children[0]);
+						next_player.play();
+						return true;
 					}
-					else if(current_wall.indexing.design === 'chessboard_grid') {
+					else {
 						if(current_wall.videos.autoplaytype === 'continue-run') {
-							next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.children[0]);
+							next_player = ZiggeoApi.V2.Player.findByElement(current_wall_ref.getElementsByClassName('mosaic_col')[0].children[0]);
 							next_player.play();
 							return true;
 						}
 					}
 				}
-			});
-
-			ziggeo_app.embed_events.on('playing', function (embedding) {
-
-				//current player
-				var current_player_ref = embedding.element()[0].parentElement;
-
-				//current wall that player is part of
-				var current_wall_ref = current_player_ref.closest(".ziggeo_videoWall");
-
-				//If we are not part of the videowall we just exit
-				if(current_wall_ref === null || typeof current_wall_ref === 'undefined') {
-					return false;
+				else if(current_wall.indexing.design === 'chessboard_grid') {
+					if(current_wall.videos.autoplaytype === 'continue-run') {
+						next_player = ZiggeoApi.V2.Player.findByElement(current_player_ref.parentElement.children[0]);
+						next_player.play();
+						return true;
+					}
 				}
+			}
+		});
 
-				//If the video ID does not exist for some reason or the autoplay is turned off, exit
-				if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
-					ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
-					return false;
-				}
+		ziggeo_app.embed_events.on('playing', function (embedding) {
 
-				ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player = embedding;
-			});
+			//current player
+			var current_player_ref = embedding.element()[0].parentElement;
 
-			return true;
-		}
+			//current wall that player is part of
+			var current_wall_ref = current_player_ref.closest(".ziggeo_videoWall");
 
-		return false;
+			//If we are not part of the videowall we just exit
+			if(current_wall_ref === null || typeof current_wall_ref === 'undefined') {
+				return false;
+			}
+
+			//If the video ID does not exist for some reason or the autoplay is turned off, exit
+			if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
+				ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
+				return false;
+			}
+
+			ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player = embedding;
+		});
+
 	}
 
 	function videowallszCreateWall(id, wall_object, counter) {
@@ -532,18 +661,19 @@
 
 
 
+
 /////////////////////////////////////////////////
 // 4. ENDLESS WALLS
 /////////////////////////////////////////////////
 
 	// function to handle the video walls without the pagination, having the endless scroll implementation base..
-	function videowallszUIVideoWallEndlessAddVideos(wall, id, data, _new) {
+	function videowallszUIVideoWallEndlessAddVideos(wall, id, wall_data, _new) {
 
 		var html = wall;
 
 		var usedVideos = 0;
-		var j = data.length;
-		
+		var j = wall_data.length;
+
 		if(ZiggeoWP.videowalls.walls[id]['loaded_data'] && _new === true) {
 			j -= ZiggeoWP.videowalls.walls[id]['loaded_data'].length;
 		}
@@ -593,11 +723,13 @@
 				break;
 			}
 
-			var tmp_embedding = '<ziggeoplayer ';
+			var codes = {
+				player: ''
+			};
 
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
 
-				tmp_embedding += ' ziggeo-width="' + _width + '"';
+				codes.player += ' ziggeo-width="' + _width + '"';
 			}
 			else if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
 				//See if we need to go to new row
@@ -605,26 +737,31 @@
 					_mosaic_row_count = 0;
 				}
 
-				tmp_embedding += ' ziggeo-width="100%"';
+				codes.player += ' ziggeo-width="100%"';
 			}
 			else {
-				tmp_embedding += ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
+				codes.player += ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
 								' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height;
 			}
 
-			tmp_embedding += ' ziggeo-video="' + data[i].token + '"' +
+			codes.player += ' ziggeo-video="' + wall_data[i].token + '"' +
 							( (usedVideos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay &&
 								ZiggeoWP.videowalls.walls[id].indexing.fresh === true) ? ' ziggeo-autoplay ' : '' );
 
 			//in case we need to add the class to it
 			if(ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== "") {
-				tmp_embedding += ' class="ziggeo-autoplay-' +
+				codes.player += ' class="ziggeo-autoplay-' +
 					( ( ZiggeoWP.videowalls.walls[id].videos.autoplaytype === 'continue-end' ) ? 'continue-end' : 'continue-run' ) +
 					'"';
 			}
 
+			//Two for a reason. First is global and true to all videowalls
+			//Second is specific for the endless walls. Use one or the other.
+			ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
+			ZiggeoWP.hooks.fire('videowallsz_endlesswall_video_add', codes);
+
 			//finalize the embedding
-			tmp_embedding += '></ziggeoplayer>';
+			var tmp_embedding = '<ziggeoplayer ' + codes.player  + '></ziggeoplayer>';
 
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
 				//@ADD - sort option as bellow, this is just a quick test
@@ -632,12 +769,12 @@
 				_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 				//html.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 				usedVideos++;
-				data[i] = null;//so that it is not used by other ifs..
+				wall_data[i] = null;//so that it is not used by other ifs..
 			}
 			else {
 				html.insertAdjacentHTML('beforeend', tmp_embedding);
 				usedVideos++;
-				data[i] = null;//so that it is not used by other ifs..
+				wall_data[i] = null;//so that it is not used by other ifs..
 			}
 		}
 
@@ -647,25 +784,33 @@
 			tmp.parentNode.removeChild(tmp);
 		}
 		else {
-			var loadingElm = document.createElement('div');
-			loadingElm.id = "ziggeo-endless-loading_more";
-			loadingElm.innerHTML = "Loading More Videos..";
-			//@HERE - make this string translatable for people using WPML.
-			//It will have two strings - loading more and no more videos..
-			wall.parentNode.appendChild(loadingElm, wall);
+			var loading_elm = document.createElement('div');
+			loading_elm.id = "ziggeo-endless-loading_more";
+
+			var info = {
+				element_ref: loading_elm,
+				text:"Loading More Videos.."
+			};
+
+			//Allows you to change the text if you wanted, or use the referene to element to apply class, etc.
+			ZiggeoWP.hooks.fire('videowallsz_wall_loading_more_text', info);
+
+			loading_elm.innerHTML = info.text;
+
+			wall.parentNode.appendChild(loading_elm, wall);
 		}
 
 		ZiggeoWP.videowalls.endless = id;
 
-		for(i = -1, j = data.length; i < j; j--) {
+		for(i = -1, j = wall_data.length; i < j; j--) {
 			//break once we load enought of videos
-			if(data[j] === null) {
-				data.splice(j, 1);
+			if(wall_data[j] === null) {
+				wall_data.splice(j, 1);
 			}
 		}
 
-		if(data.length > 0) {
-			ZiggeoWP.videowalls.walls[id]['loaded_data'] = data;
+		if(wall_data.length > 0) {
+			ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
 		}
 
 	}
@@ -723,7 +868,7 @@
 /////////////////////////////////////////////////
 
 	// function to handle the video walls with the pagination
-	function videowallszUIVideoWallPagedAddVideos(wall, id, html, data) {
+	function videowallszUIVideoWallPagedAddVideos(wall, id, html, wall_data) {
 
 		//number of videos per page currently
 		var currentVideosPageCount = 0;
@@ -734,28 +879,36 @@
 		//did any videos match the checks while listing them - so that we do not place multiple pages since the count stays on 0
 		var newPage = true;
 
-		for(i = 0, j = data.length, tmp=''; i < j; i++, tmp='') {
+		var codes = {
+			player: ''
+		};
 
-			var tmp_embedding = '<ziggeoplayer ' +
-							' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
+		for(i = 0, j = wall_data.length, tmp=''; i < j; i++, tmp='') {
+
+			codes.player = ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
 							' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height +
-							' ziggeo-video="' + data[i].token + '"' +
+							' ziggeo-video="' + wall_data[i].token + '"' +
 							( (usedVideos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay) ? ' ziggeo-autoplay ' : '' );
 
 			//in case we need to add the class to it
 			if(ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== "") {
-				tmp_embedding += ' class="ziggeo-autoplay-' +
+				codes.player += ' class="ziggeo-autoplay-' +
 					( ( ZiggeoWP.videowalls.walls[id].videos.autoplaytype === 'continue-end' ) ? 'continue-end' : 'continue-run' ) +
 					'"';
 			}
 
+			//Two for a reason. First is global and true to all videowalls
+			//Second is specific for the endless walls. Use one or the other.
+			ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
+			ZiggeoWP.hooks.fire('videowallsz_pagedwall_video_add', codes);
+
 			//finalize the embedding
-			tmp_embedding += '></ziggeoplayer>';
+			var tmp_embedding = '<ziggeoplayer ' + codes.player  + '></ziggeoplayer>';
 
 			tmp += tmp_embedding;
 			usedVideos++;
 			currentVideosPageCount++;
-			data[i] = null;//so that it is not used by other ifs..
+			wall_data[i] = null;//so that it is not used by other ifs..
 
 			//Do we need to create a new page?
 			//We only create new page if there were any videos to add, otherwise if 1 video per page is set, we would end up with empty pages when videos are not added..
@@ -891,9 +1044,9 @@
 // 6. VIDEOSITE PLAYLIST WALLLS
 /////////////////////////////////////////////////
 
-	function videowallszUIVideoSitePlaylistCreate(wall, id, data) {
+	function videowallszUIVideoSitePlaylistCreate(wall, id, wall_data) {
 
-		ZiggeoWP.videowalls.walls[id]['loaded_data'] = data;
+		ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
 		//The ID for the video 
 		ZiggeoWP.videowalls.walls[id].videos.current = 0;
 
@@ -905,9 +1058,9 @@
 
 		var _list = [];
 
-		for(i = 0, j = data.length; i < j; i++) {
+		for(i = 0, j = wall_data.length; i < j; i++) {
 			//Create a list for main player
-			_list.push(data[i].token);
+			_list.push(wall_data[i].token);
 		}
 
 		var _playlist = document.createElement('div');
@@ -916,10 +1069,10 @@
 		_main.appendChild(_playlist);
 
 		_main.appendChild(videowallszUIVideositePlaylistDetailsCreate({
-			title: data[0].title,
-			description: data[0].description,
-			created: videowallszGetDateFromUnix(data[0].created),
-			__complete: data[0]
+			title: wall_data[0].title,
+			description: wall_data[0].description,
+			created: videowallszGetDateFromUnix(wall_data[0].created),
+			__complete: wall_data[0]
 		}));
 
 		wall.appendChild(_main);
@@ -927,7 +1080,7 @@
 		videowallsUIVideositePlaylistCreatePlayer(id, _playlist, _list, false);
 
 		//Create side
-		var _side = videowallszUIVideositePlaylistSidePopulate(id, data);
+		var _side = videowallszUIVideositePlaylistSidePopulate(id, wall_data);
 
 		if(_side !== null) {
 			wall.appendChild(_side);
@@ -950,7 +1103,7 @@
 
 	}
 
-	function videowallszUIVideositePlaylistSidePopulate(wall_id, data) {
+	function videowallszUIVideositePlaylistSidePopulate(wall_id, wall_data) {
 
 		var _new = false;
 
@@ -965,7 +1118,7 @@
 			_new = true;
 		}
 
-		for(i = 0, j = data.length; i < j; i++) {
+		for(i = 0, j = wall_data.length; i < j; i++) {
 			var _list_div = document.createElement('div');
 			_list_div.id = "videosite_playlist-v-" + i;
 
@@ -976,16 +1129,16 @@
 			var _img_div = document.createElement('div');
 			_img_div.className = 'img';
 			var _img = document.createElement('img');
-			_img.src = 'https://' + data[i]['embed_image_url'];
+			_img.src = 'https://' + wall_data[i]['embed_image_url'];
 			_img_div.appendChild(_img);
 
 			var _title = document.createElement('div');
-			_title.innerHTML = data[i]['title'];
+			_title.innerHTML = wall_data[i]['title'];
 			_title.className = 'video_title';
 
 			var _time = document.createElement('div');
 			//TODO: we could add here a check to see if it is over minute, etc.
-			_time.innerHTML = data[i]['duration'] + 's';
+			_time.innerHTML = wall_data[i]['duration'] + 's';
 			_time.className = 'video_duration';
 
 			//We can add here title, image and time
