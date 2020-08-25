@@ -207,6 +207,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
  15. `videowalls_videosite_playlist_goto`
  16. `videowalls_videosite_main_player_pre_create`
  17. `videowalls_videosite_playlist_step_automated`
+* Small fix to allow px and % to be given to video player width
 
 == Changelog ==
 

@@ -186,8 +186,8 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 
 			'videowallszCreateWall("' . $wallID . '", {
 					videos: {
-						width: ' . $wall['video_width'] . ',
-						height: ' . $wall['video_height'] . ',
+						width: "' . $wall['video_width'] . '",
+						height: "' . $wall['video_height'] . '",
 						autoplay: ' . $wall['autoplay'] . ',
 						autoplaytype: "' . $autoplaytype . '"
 					},
