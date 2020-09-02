@@ -209,6 +209,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
  17. `videowalls_videosite_playlist_step_automated`
 * Small fix to allow px and % to be given to video player width
 * Added new `video_stretch` parameter to be easily added to the players in the videowall, which helps further fine tune the video's look within the videowalls.
+* Improvement: Added a check if the core plugin is available and report in admin if it is not.
 
 == Changelog ==
 
