@@ -113,6 +113,18 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'simple'				=> true,
 			'default_value'			=> 2
 		),
+		'video_stretch' => array(
+			'type'					=> 'enum',
+			'description'			=> _x('Choose if you want any type of stretching being applied on the video players within the video wall.', 'videowalls-for-ziggeo'),
+			'options'				=> array('none', 'all', 'by_height', 'by_width'),
+			'used_by_player'		=> true,
+			'used_by_recorder'		=> false,
+			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
+			'advanced'				=> true,
+			'simple'				=> true,
+			'default_value'			=> 'none'
+		),
 		'videos_to_show' => array(
 			'type'					=> 'array',
 			'description'			=> _x('Array to setup which videos should be shown. Default video wall shows videos made on post it is on. This accepts comma separated values of post IDs (format: `post_ID`) or any other tags. Adding just &apos;&apos; (two single quotes) will show all videos in your account (videos_to_show=&apos;&apos;)', 'videowalls-for-ziggeo'),

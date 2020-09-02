@@ -755,6 +755,19 @@
 					'"';
 			}
 
+			//Stretch
+			if(ZiggeoWP.videowalls.walls[id].videos.stretch !== false) {
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'both') {
+					codes.player += ' ziggeo-stretch';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_height') {
+					codes.player += ' ziggeo-stretchheight';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_width') {
+					codes.player += ' ziggeo-stretchwidth';
+				}
+			}
+
 			//Two for a reason. First is global and true to all videowalls
 			//Second is specific for the endless walls. Use one or the other.
 			ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
@@ -895,6 +908,19 @@
 				codes.player += ' class="ziggeo-autoplay-' +
 					( ( ZiggeoWP.videowalls.walls[id].videos.autoplaytype === 'continue-end' ) ? 'continue-end' : 'continue-run' ) +
 					'"';
+			}
+
+			//Stretch
+			if(ZiggeoWP.videowalls.walls[id].videos.stretch !== false) {
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'both') {
+					codes.player += ' ziggeo-stretch';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_height') {
+					codes.player += ' ziggeo-stretchheight';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_width') {
+					codes.player += ' ziggeo-stretchwidth';
+				}
 			}
 
 			//Two for a reason. First is global and true to all videowalls

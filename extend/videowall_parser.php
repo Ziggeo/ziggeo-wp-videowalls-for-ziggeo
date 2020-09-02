@@ -178,6 +178,11 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';
 		$wall['hide_wall'] = ($wall['hide_wall']) ? 'true' : 'false';
 
+		if(!isset($wall['video_stretch']) || $wall['video_stretch'] === '') {
+			$wall['video_stretch'] = false;
+		}
+
+
 		//closing videowall div
 		$ret .= $wall_structure['div_code_end'];
 
@@ -189,7 +194,8 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 						width: "' . $wall['video_width'] . '",
 						height: "' . $wall['video_height'] . '",
 						autoplay: ' . $wall['autoplay'] . ',
-						autoplaytype: "' . $autoplaytype . '"
+						autoplaytype: "' . $autoplaytype . '",
+						stretch: "' . $wall['video_stretch'] . '"
 					},
 					indexing: {
 						perPage: ' . $wall['videos_per_page'] . ',

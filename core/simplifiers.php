@@ -21,6 +21,7 @@ function videowallsz_p_wall_defaults() {
 		'videos_to_show' => '', //%CURRENT_ID%, %ZIGGEO_USER%
 		'video_height' => '240',
 		'video_width' => '320',
+		'video_stretch' => 'none', //none, all, by_height, by_width
 		'wall_design' => 'show_pages', //show_pages, slide_wall, chessboard_grid, mosaic_grid, videosite_playlist
 	);
 
