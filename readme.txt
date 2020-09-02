@@ -2,7 +2,7 @@
 Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Stable tag: 1.5
 Requires PHP: 5.2.4
 License: GPLv2 or later
