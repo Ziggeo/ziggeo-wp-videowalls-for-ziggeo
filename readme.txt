@@ -186,6 +186,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 = 1.6 =
 * Improvement: Small CSS improvement to help bring the previous and next arrows in slidewall up compared to video which was not case for all setups.
+* Fix: Switching pages will stop the video playback
 
 == Changelog ==
 

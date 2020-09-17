@@ -225,6 +225,12 @@
 		});
 		*/
 
+		ZiggeoWP.hooks.set('videowallsz_wall_switching_page', 'videowallsUIPPauseVideos', function(data) {
+			if(ZiggeoWP.videowalls.walls[data.wall_id].current_player) {
+				ZiggeoWP.videowalls.walls[data.wall_id].current_player.pause();
+			}
+		});
+
 	});
 
 
@@ -556,10 +562,10 @@
 			}
 
 			//If the video ID does not exist for some reason or the autoplay is turned off, exit
-			if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
-				ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
-				return false;
-			}
+			//if(!ZiggeoWP.videowalls.walls[current_wall_ref.id] ||
+			//	ZiggeoWP.videowalls.walls[current_wall_ref.id].videos.autoplay !== true) {
+			//	return false;
+			//}
 
 			ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player = embedding;
 		});
@@ -1035,9 +1041,9 @@
 			return false;
 		}
 
-		var pageID = id + '_page_' + page;
+		var page_id = id + '_page_' + page;
 
-		var newPage = document.getElementById(pageID);
+		var page_new = document.getElementById(page_id);
 
 		//Get all pages under current wall
 		var pages = wall.getElementsByClassName('ziggeo_wallpage');
@@ -1048,7 +1054,7 @@
 		}
 
 		//set the visual indicator of what page is selected
-		var pageNumbers = wall.getElementsByClassName('ziggeo_wallpage_number');
+		var page_numbers = wall.getElementsByClassName('ziggeo_wallpage_number');
 
 		if(current === null || typeof current === 'undefined') {
 			current = wall.getElementsByClassName('ziggeo_wallpage_number')[page-1];
@@ -1057,15 +1063,22 @@
 		//This is only active if we show page numbers / page buttons
 		if(current) {
 			//reset style of the page number buttons
-			for(i = 0, j = pageNumbers.length; i < j; i++) {
-				pageNumbers[i].className = 'ziggeo_wallpage_number';
+			for(i = 0, j = page_numbers.length; i < j; i++) {
+				page_numbers[i].className = 'ziggeo_wallpage_number';
 			}
 
 			//adding .current class to the existing list of classes
 			current.className = 'ziggeo_wallpage_number current';
 		}
 
-		newPage.style.display = 'block';
+		page_new.style.display = 'block';
+
+		ZiggeoWP.hooks.fire('videowallsz_wall_switching_page', {
+			wall_id: id,
+			new_page: page_new,
+			page_id: page_id,
+			status: 'Switching page'
+		});
 	}
 
 
