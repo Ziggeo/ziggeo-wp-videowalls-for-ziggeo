@@ -4,25 +4,26 @@
 function videowallsz_p_wall_defaults() {
 
 	$defaults = array(
-		'autoplay' => false,
-		'autoplay-continue-end' => false,
-		'autoplay-continue-run' => false,
-		'fixed_height' => '',
-		'fixed_width' => '',
-		'message' => '',
-		'on_no_videos' => 'showmessage', //showmessage, showtemplate, hidewall
-		'scalable_height' => '',
-		'scalable_width' => '',
-		'show' => false,
-		'show_videos' => 'approved', //all, approved, rejected, pending
-		'template_name' => '',
-		'title' => '',
-		'videos_per_page' => 2,
-		'videos_to_show' => '', //%CURRENT_ID%, %ZIGGEO_USER%
-		'video_height' => '240',
-		'video_width' => '320',
-		'video_stretch' => 'none', //none, all, by_height, by_width
-		'wall_design' => 'show_pages', //show_pages, slide_wall, chessboard_grid, mosaic_grid, videosite_playlist
+		'autoplay'                  => false,
+		'autoplay-continue-end'     => false,
+		'autoplay-continue-run'     => false,
+		'fixed_height'              => '',
+		'fixed_width'               => '',
+		'message'                   => '',
+		'on_no_videos'              => 'showmessage', //showmessage, showtemplate, hidewall
+		'scalable_height'           => '',
+		'scalable_width'            => '',
+		'show'                      => false,
+		'show_delay'                => 2,
+		'show_videos'               => 'approved', //all, approved, rejected, pending
+		'template_name'             => '',
+		'title'                     => '',
+		'videos_per_page'           => 2,
+		'videos_to_show'            => '', //%CURRENT_ID%, %ZIGGEO_USER%
+		'video_height'              => '240',
+		'video_width'               => '320',
+		'video_stretch'             => 'none', //none, all, by_height, by_width
+		'wall_design'               => 'show_pages', //show_pages, slide_wall, chessboard_grid, mosaic_grid, videosite_playlist
 	);
 
 	return $defaults;

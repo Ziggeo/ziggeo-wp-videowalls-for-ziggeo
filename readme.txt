@@ -186,7 +186,8 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 = 1.6 =
 * Improvement: Small CSS improvement to help bring the previous and next arrows in slidewall up compared to video which was not case for all setups.
-* Fix: Switching pages will stop the video playback
+* Fix: Switching pages will pause the video playback for videos on previous pages.
+* Introducing: Added `show_delay` parameter to allow you to change the time after which the videowall is shown when show parameter is used (defaults to 2 seconds). Not setting it up, or leaving on 2 seconds makes it behave as it was before, so no action needed. Please note smaller times are not recommended and can cause issues, do test it out and give it enough time per the same.
 
 == Changelog ==
 

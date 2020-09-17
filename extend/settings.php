@@ -247,6 +247,17 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'advanced'				=> true,
 			'simple'				=> true,
 			'default_value'			=> false
+		),
+		'show_delay' => array(
+			'type'					=> 'integer',
+			'description'			=> _x('Number of seconds to pass for videowall to be shown. Defaults to 2seconds as lower numbers might not work in different parts of Wordpress.)', 'videowalls-for-ziggeo'),
+			'used_by_player'		=> false,
+			'used_by_recorder'		=> false,
+			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
+			'advanced'				=> true,
+			'simple'				=> true,
+			'default_value'			=> 2
 		)
 	);
 

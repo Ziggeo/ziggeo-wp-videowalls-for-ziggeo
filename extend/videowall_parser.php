@@ -182,6 +182,12 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 			$wall['video_stretch'] = false;
 		}
 
+		//This way we force it to be integer even if some text is passed by mistake.
+		//Devs: Please note that setTimeout function will always have a delay of it's own.
+		//      Even if you set it up with 0 it will have a delay of approx 200 ms.
+		//      Please also note that this will have to be higher if the page / location you are placing
+		//      the videowall does not load all resources until some time has passed (for example has lazy load)
+		$wall['show_delay'] = (int)$wall['show_delay'] * 1000;
 
 		//closing videowall div
 		$ret .= $wall_structure['div_code_end'];
@@ -249,7 +255,7 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 					//Turns out we sometimes need a bit more time (needed for some integrations)
 					'setTimeout(function(){
 						videowallszUIVideoWallShow("' . $wallID . '");
-					}, 2000);
+					}, ' . $wall['show_delay'] . ');
 				});
 			</script>';
 		}
