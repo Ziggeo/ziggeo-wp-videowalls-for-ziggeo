@@ -97,6 +97,7 @@ INDEX:
 		cursor: pointer;
 		background-position: center center;
 		background-repeat: no-repeat;
+		z-index: 2;
 	}
 	/* to make previous stick before the video */
 	.ziggeo_videowall_slide_previous {

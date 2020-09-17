@@ -22,6 +22,11 @@
 //		* videowallszUIVideoWallPagedAddVideos()
 //		* videowallszUIVideoWallPagedShowPage()
 //	6. VideoSite Playlist Walls
+//		* videowallszUIVideoSitePlaylistCreate()
+//		* videowallszUIVideositePlaylistSidePopulate()
+//		* videowallszUIVideositePlaylistDetailsCreate()
+//		* videowallsUIVideositePlaylistGoTo()
+//		* videowallsUIVideositePlaylistCreatePlayer()
 //	7. Polyfill
 //		* .matches
 //		* .closest
@@ -1317,6 +1322,7 @@
 
 		player.activate();
 	}
+
 
 
 
