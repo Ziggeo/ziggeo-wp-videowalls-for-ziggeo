@@ -207,6 +207,32 @@
 			}, 0
 		);
 
+		//Setting the orientation info
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIPOrinetationSet',
+			function(data) {
+
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				var i, l;
+
+				for(i = 0, l = data.data.length; i < l; i++) {
+					var current = data.data[i];
+
+					var _orientation = videowallszGetOrientation(current);
+
+					if( typeof current.wordpress === 'undefined') {
+						data.data[i].wordpress = {
+							'orientation': ''
+						};
+					}
+
+					data.data[i].wordpress.orientation = _orientation;
+				}
+			}, 1
+		);
+
 		/*
 		//The following are two examples how you can change the template of the video player when videos are not found
 		// as well as to change the message that is shown
@@ -618,6 +644,21 @@
 		return _date.toDateString();
 	}
 
+	//Returns the right orientation info
+	function videowallszGetOrientation(video_data) {
+		var width = video_data.default_stream.video_width;
+		var height = video_data.default_stream.video_height;
+
+		//portrait
+		if(height > width) {
+			return 'portrait';
+		}
+		//landscape
+		else {
+			return 'landscape';
+		}
+	}
+
 
 
 
@@ -735,7 +776,8 @@
 			}
 
 			var codes = {
-				player: ''
+				player: '',
+				additional: ''
 			};
 
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
@@ -766,6 +808,11 @@
 					'"';
 			}
 
+			//Set the orientation
+			if(wall_data[i].wordpress) {
+				codes.additional = ' data-orientation="' + wall_data[i].wordpress.orientation + '"';
+			}
+
 			//Stretch
 			if(ZiggeoWP.videowalls.walls[id].videos.stretch !== false) {
 				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'both') {
@@ -785,7 +832,7 @@
 			ZiggeoWP.hooks.fire('videowallsz_endlesswall_video_add', codes);
 
 			//finalize the embedding
-			var tmp_embedding = '<ziggeoplayer ' + codes.player  + '></ziggeoplayer>';
+			var tmp_embedding = '<ziggeoplayer ' + codes.player  + codes.additional + '></ziggeoplayer>';
 
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
 				//@ADD - sort option as bellow, this is just a quick test
@@ -934,13 +981,18 @@
 				}
 			}
 
+			//Set the orientation
+			if(wall_data[i].wordpress) {
+				codes.additional = ' data-orientation="' + wall_data[i].wordpress.orientation + '"';
+			}
+
 			//Two for a reason. First is global and true to all videowalls
 			//Second is specific for the endless walls. Use one or the other.
 			ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
 			ZiggeoWP.hooks.fire('videowallsz_pagedwall_video_add', codes);
 
 			//finalize the embedding
-			var tmp_embedding = '<ziggeoplayer ' + codes.player  + '></ziggeoplayer>';
+			var tmp_embedding = '<ziggeoplayer ' + codes.player + codes.additional + '></ziggeoplayer>';
 
 			tmp += tmp_embedding;
 			usedVideos++;
@@ -1325,6 +1377,19 @@
 			element: placeholder_ref,
 			attrs: _attrs
 		});
+
+		var current_data = '';
+		var i, l;
+
+		for(i = 0, l = ZiggeoWP.videowalls.walls[wall_id].loaded_data.length; i < l; i++) {
+			//ZiggeoWP.videowalls.walls[wall_id].loaded_data
+			if(ZiggeoWP.videowalls.walls[wall_id].loaded_data[i].token === video_list[0]) {
+				current_data = ZiggeoWP.videowalls.walls[wall_id].loaded_data[i];
+
+				player.element()[0].setAttribute('data-orientation', videowallszGetOrientation(current_data));
+				break;
+			}
+		}
 
 		player.on('playlist-next', function(video_info){
 			//video_info = poster URL, Video URL and video token

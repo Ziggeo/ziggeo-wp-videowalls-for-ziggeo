@@ -178,7 +178,7 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';
 		$wall['hide_wall'] = ($wall['hide_wall']) ? 'true' : 'false';
 
-		if(!isset($wall['video_stretch']) || $wall['video_stretch'] === '') {
+		if(!isset($wall['video_stretch']) || $wall['video_stretch'] === '' || $wall['video_stretch'] === 'none') {
 			$wall['video_stretch'] = false;
 		}
 
