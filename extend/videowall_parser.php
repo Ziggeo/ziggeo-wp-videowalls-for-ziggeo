@@ -208,7 +208,8 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 						status: "' . $wall['show_videos'] . '",
 						design: "' . $wall['wall_design'] . '",';
 			$ret .=		'
-						fresh: true
+						fresh: true,
+						auto_refresh: ' . (int)$wall['auto_refresh'] . '
 					},
 					onNoVideos: {
 						showTemplate: ' . $showtemplate . ',

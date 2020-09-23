@@ -7,6 +7,7 @@ function videowallsz_p_wall_defaults() {
 		'autoplay'                  => false,
 		'autoplay-continue-end'     => false,
 		'autoplay-continue-run'     => false,
+		'auto_refresh'              => 0, //0 for never, any other number is equal to seconds of wait.
 		'fixed_height'              => '',
 		'fixed_width'               => '',
 		'message'                   => '',

@@ -237,6 +237,17 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'simple'				=> false,
 			'default_value'			=> false
 		),
+		'auto_refresh' => array(
+			'type'					=> 'integer',
+			'description'			=> _x('Integer representing the number of seconds to wait before checking if there is any new video available. Zero turns it off', 'videowalls-for-ziggeo'),
+			'used_by_player'		=> true,
+			'used_by_recorder'		=> false,
+			'used_by_rerecorder'	=> false,
+			'used_by_uploader'		=> false,
+			'advanced'				=> true,
+			'simple'				=> false,
+			'default_value'			=> 0
+		),
 		'show' => array(
 			'type'					=> 'bool',
 			'description'			=> _x('Boolean value indicating if video wall is shown even if the video is not submitted (defaults to waiting for submission of a video to show the video wall, adding this shows it right away)', 'videowalls-for-ziggeo'),

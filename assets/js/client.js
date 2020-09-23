@@ -11,6 +11,8 @@
 //		* videowallszUISetupAutoplay()
 //		* videowallszCreateWall()
 //		* videowallszGetDateFromUnix()
+//		* videowallszGetOrientation()
+//		* videowallszUIPAutorefresh()
 //	3. Filtering
 //		* videowallszFilterApproved()
 //		* videowallszFilterRejected()
@@ -84,9 +86,14 @@
 				}
 
 				data.wall_element.className = "ziggeo_videoWall " + wall_class;
+
+				if(ZiggeoWP.videowalls.walls[data.wall_id].indexing.auto_refresh > 0) {
+					videowallszUIPAutorefresh(data.wall_id, true);
+				}
 			}
 		);
 
+		//Setup the autoplay on autoplay enabled videowalls
 		ZiggeoWP.hooks.set('videowallsz_wall_request_made', 'videowallsUIHandleAutoplaySetup', 
 			function(data) {
 				if(ZiggeoWP.videowalls.autoplay_set) {
@@ -99,6 +106,7 @@
 			}
 		);
 
+		//Handle the show_pages and slide_wall videowall (paged videowalls)
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParsePagedWalls',
 			function(data) {
 
@@ -121,6 +129,7 @@
 			}
 		);
 
+		//Handle chessboard_grid and mosaic_wall (endless videowalls)
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseEndlessWalls',
 			function(data) {
 				if(data.data.length === 0) {
@@ -149,10 +158,18 @@
 				}
 
 				ZiggeoWP.videowalls.onscroll_set = true;
-				videowallszUIVideoWallEndlessAddVideos(data.wall_element, data.wall_id, data.data, true);
+
+				if(data.status === 'refreshing wall') {
+					//new_data: new_data,
+					videowallszUIVideoWallEndlessAddVideos(data.wall_element, data.wall_id, data.new_data, false);
+				}
+				else {
+					videowallszUIVideoWallEndlessAddVideos(data.wall_element, data.wall_id, data.data, true);
+				}
 			}
 		);
 
+		//Parse the videos for the videosite_playlist videowall
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseVideositePlaylist',
 			function(data) {
 
@@ -163,11 +180,17 @@
 				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
 
 				if(current_wall.indexing.design === 'videosite_playlist') {
-					videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data);
+					if(data.status === 'refreshing wall') {
+						videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data, true);
+					}
+					else {
+						videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data, false);
+					}
 				}
 			}
 		);
 
+		//Handler for when there are no videos
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseNoVideos',
 			function(data) {
 				if(data.data.length > 0) {
@@ -233,6 +256,22 @@
 			}, 1
 		);
 
+		//Save the latest video that we got
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIPFreshestVideo',
+			function(data) {
+
+				if(!ZiggeoWP.videowalls.walls[data.wall_id].indexing.last_video) {
+					ZiggeoWP.videowalls.walls[data.wall_id].indexing.last_video = null;
+				}
+
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				ZiggeoWP.videowalls.walls[data.wall_id].indexing.last_video = data.data[0];
+			}, 1
+		);
+
 		/*
 		//The following are two examples how you can change the template of the video player when videos are not found
 		// as well as to change the message that is shown
@@ -277,7 +316,7 @@
 		}
 
 		var search_obj = {
-			limit: 100,
+			limit: (search_params.limit) ? search_params.limit : 100,
 			tags: (ZiggeoWP.videowalls.walls[id].tags) ? ZiggeoWP.videowalls.walls[id].tags : "",
 			skip: (search_params.skip) ? search_params.skip : 0,
 			approved: ZiggeoWP.videowalls.walls[id].status
@@ -659,6 +698,100 @@
 		}
 	}
 
+	function videowallszUIPAutorefresh(wall_id, initial) {
+
+		var time = ZiggeoWP.videowalls.walls[wall_id].indexing.auto_refresh * 1000;
+
+		if(initial === true) {
+			//This is set up on very first call, so we will always allow it + 10 seconds to let other things load up freely.
+			time += 10000;
+		}
+
+		//Sure we could use setInterval, however setTimeout is used because we want to make a new request only
+		// after we get the response from the previous one. It makes no sense for us to send one each second
+		// and we for example did not yet get a response.
+		setTimeout(function() {
+			var wall = ZiggeoWP.videowalls[wall_id];
+
+			var search_obj = {
+				limit: 1,
+				tags: (ZiggeoWP.videowalls.walls[wall_id].tags) ? ZiggeoWP.videowalls.walls[wall_id].tags : "",
+				skip: 0,
+				approved: ZiggeoWP.videowalls.walls[wall_id].status
+			};
+
+			var _index = ziggeo_app.videos.index( search_obj );
+			var last_video = ZiggeoWP.videowalls.walls[wall_id].indexing.last_video.token;
+
+			_index.success( function (data) {
+
+				if(data.length > 0) {
+					if(data[0].token == last_video) {
+						//Same token, nothing to do..
+						videowallszUIPAutorefresh(wall_id);
+						return false;
+					}
+					else {
+						//Not the same token, we should show this one
+						//This will stop the current playback if active!
+						// (if you use this setup, you likely want this to happen)
+
+						//At this time we should request 10 more videos to see how many new videos are present
+						//DEVS: If at some point you need more than 10, let us know, we could make it configurable
+						// depending on popularity.
+
+						search_obj.limit = 10;
+
+						var _in_index = ziggeo_app.videos.index( search_obj );
+
+						_in_index.success( function (data) {
+
+							ZiggeoWP.videowalls.walls[wall_id].indexing.last_video = data[0];
+
+							var new_data = [];
+							var i, l;
+
+							for(i = 0, l = data.length; i < l; i++) {
+								if(data[i].token === last_video) {
+									break;
+								}
+								new_data.push(data[i]);
+							}
+
+							if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'approved') {
+								new_data = videowallszFilterApproved(new_data);
+							}
+							else if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'rejected') {
+								new_data = videowallszFilterRejected(new_data);
+							}
+							else if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'pending') {
+								new_data = videowallszFilterPending(new_data);
+							}
+
+							if(typeof ZiggeoWP.videowalls.walls[wall_id].loaded_data !== 'undefined') {
+								ZiggeoWP.videowalls.walls[wall_id].loaded_data = new_data.concat(ZiggeoWP.videowalls.walls[wall_id].loaded_data);
+							}
+							else {
+								ZiggeoWP.videowalls.walls[wall_id].loaded_data = new_data;
+							}
+
+							ZiggeoWP.hooks.fire('videowallsz_wall_index_data_start', {
+								wall_id: wall_id,
+								wall_element: document.getElementById(wall_id),
+								search_parameters: search_obj,
+								data: ZiggeoWP.videowalls.walls[wall_id].loaded_data,
+								new_data: new_data,
+								status: 'refreshing wall'
+							});
+
+							videowallszUIPAutorefresh(wall_id);
+						});
+					}
+				}
+			});
+		}, time);
+	}
+
 
 
 
@@ -837,13 +970,25 @@
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
 				//@ADD - sort option as bellow, this is just a quick test
 
-				_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+				if(_new === false) {
+					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('afterbegin', tmp_embedding);
+				}
+				else {
+					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+				}
 				//html.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 				usedVideos++;
 				wall_data[i] = null;//so that it is not used by other ifs..
 			}
 			else {
-				html.insertAdjacentHTML('beforeend', tmp_embedding);
+				//We could add the check if the video should be added at the front or at the back..
+				// at this time we will just add it at the front.
+				if(_new == false) {
+					html.insertAdjacentHTML('afterbegin', tmp_embedding);
+				}
+				else {
+					html.insertAdjacentHTML('beforeend', tmp_embedding);
+				}
 				usedVideos++;
 				wall_data[i] = null;//so that it is not used by other ifs..
 			}
@@ -880,9 +1025,9 @@
 			}
 		}
 
-		if(wall_data.length > 0) {
+		/*if(wall_data.length > 0) {
 			ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
-		}
+		}*/
 
 	}
 
@@ -954,6 +1099,8 @@
 			player: ''
 		};
 
+		ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
+
 		for(i = 0, j = wall_data.length, tmp=''; i < j; i++, tmp='') {
 
 			codes.player = ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
@@ -997,7 +1144,7 @@
 			tmp += tmp_embedding;
 			usedVideos++;
 			currentVideosPageCount++;
-			wall_data[i] = null;//so that it is not used by other ifs..
+			//wall_data[i] = null;//so that it is not used by other ifs..
 
 			//Do we need to create a new page?
 			//We only create new page if there were any videos to add, otherwise if 1 video per page is set, we would end up with empty pages when videos are not added..
@@ -1142,21 +1289,32 @@
 
 	function videowallszUIVideoSitePlaylistCreate(wall, id, wall_data) {
 
-		ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
 		//The ID for the video 
 		ZiggeoWP.videowalls.walls[id].videos.current = 0;
-
-		//Create main
-
-		var _main = document.createElement('div');
-		_main.id = 'videosite_playlist_m_' + id;
-		_main.className = 'videosite_playlist_main';
+		var _exists = false;
 
 		var _list = [];
 
 		for(i = 0, j = wall_data.length; i < j; i++) {
 			//Create a list for main player
 			_list.push(wall_data[i].token);
+		}
+
+		if(document.getElementById('videosite_playlist_m_' + id)) {
+			var _main = document.getElementById('videosite_playlist_m_' + id);
+
+			//Removing everything from it so we make it all a new
+			_main.innerHTML = '';
+
+			_exists = true;
+		}
+		else {
+			ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
+
+			//Create main
+			var _main = document.createElement('div');
+			_main.id = 'videosite_playlist_m_' + id;
+			_main.className = 'videosite_playlist_main';
 		}
 
 		var _playlist = document.createElement('div');
@@ -1188,15 +1346,16 @@
 		//Let us make the main and side of same height
 		_side.style.height = _main.getBoundingClientRect().height + 'px';
 
-		window.addEventListener('resize', function() {
-			_side.style.height = _main.getBoundingClientRect().height + 'px';
-		});
+		if(_exists === false) {
+			window.addEventListener('resize', function() {
+				_side.style.height = _main.getBoundingClientRect().height + 'px';
+			});
 
-		//Thank you Daniel: https://stackoverflow.com/a/39312522
-		new ResizeObserver(function() {
-			_side.style.height = _main.getBoundingClientRect().height + 'px';
-		}).observe(_main)
-
+			//Thank you Daniel: https://stackoverflow.com/a/39312522
+			new ResizeObserver(function() {
+				_side.style.height = _main.getBoundingClientRect().height + 'px';
+			}).observe(_main)
+		}
 	}
 
 	function videowallszUIVideositePlaylistSidePopulate(wall_id, wall_data) {
@@ -1206,6 +1365,7 @@
 		//Let us see if this is already created or not
 		if(document.getElementById('videosite_playlist_s_' + wall_id)) {
 			var _side = document.getElementById('videosite_playlist_s_' + wall_id);
+			_side.innerHTML = '';
 		}
 		else {
 			var _side = document.createElement('div');
@@ -1247,32 +1407,32 @@
 			var _main_ref = document.getElementById('videosite_playlist_m_' + wall_id);
 			_main_ref = _main_ref.getElementsByClassName('video_placeholder')[0];
 
-			if(_new) {
-				_list_div.addEventListener('click', function(evnt) {
-					//Play from this video
+			_list_div.addEventListener('click', function(evnt) {
+				//Play from this video
 
-					var _go_to = evnt.currentTarget.id.replace('videosite_playlist-v-', '');
+				var _go_to = evnt.currentTarget.id.replace('videosite_playlist-v-', '');
 
-					var _t_data = ZiggeoWP.videowalls.walls[wall_id].loaded_data.slice(_go_to);
+				var _t_data = ZiggeoWP.videowalls.walls[wall_id].loaded_data.slice(_go_to);
 
-					var _list = [];
+				var _list = [];
 
-					for(i = 0, j = _t_data.length; i < j; i++) {
-						//Create a list for main player
-						_list.push(_t_data[i].token);
-					}
+				for(i = 0, j = _t_data.length; i < j; i++) {
+					//Create a list for main player
+					_list.push(_t_data[i].token);
+				}
 
-					videowallsUIVideositePlaylistCreatePlayer(wall_id, _main_ref, _list, true);
-					videowallsUIVideositePlaylistGoTo(wall_id, _go_to);
-				});
-			}
+				videowallsUIVideositePlaylistCreatePlayer(wall_id, _main_ref, _list, true);
+				videowallsUIVideositePlaylistGoTo(wall_id, _go_to);
+			});
+//			if(_new) {
+//			}
 		}
 
-		if(_new) {
+//		if(_new) {
 			return _side;
-		}
+//		}
 
-		return null;
+//		return null;
 	}
 
 	//function to create and update the details if same ID already exists

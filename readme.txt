@@ -185,10 +185,13 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 == Upgrade notice ==
 
 = 1.6 =
-* Improvement: Small CSS improvement to help bring the previous and next arrows in slidewall up compared to video which was not case for all setups.
-* Fix: Switching pages will pause the video playback for videos on previous pages.
 * Introducing: Added `show_delay` parameter to allow you to change the time after which the videowall is shown when show parameter is used (defaults to 2 seconds). Not setting it up, or leaving on 2 seconds makes it behave as it was before, so no action needed. Please note smaller times are not recommended and can cause issues, do test it out and give it enough time per the same.
+* Introducing: Added `auto_refresh` parameter that will actively check for new videos. 0 to turn it off (so works as so far) or change it to any positive number for amount of seconds to wait before a new check. Please note that closer the checks are together more resources you will spend. Defaults to never (0).
+
+* Improvement: Small CSS improvement to help bring the previous and next arrows in slidewall up compared to video which was not case for all setups.
 * Improvement: Videowall players are now orientation aware and all videos are marked with [data-orientation="{orientation}"], where {orientation} can be "landscape" or "portrait".
+
+* Fix: Switching pages will pause the video playback for videos on previous pages.
 
 == Changelog ==
 
