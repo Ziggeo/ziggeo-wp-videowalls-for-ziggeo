@@ -1517,8 +1517,8 @@
 
 		var _attrs = {
 			width: '100%',
-			theme: "modern",
-			themecolor: "red",
+			theme: 'modern',
+			themecolor: 'red',
 		};
 
 		if(typeof ZiggeoWP.videowalls.video_list_player !== 'undefined') {
