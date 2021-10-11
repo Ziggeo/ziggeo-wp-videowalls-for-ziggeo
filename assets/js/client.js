@@ -319,7 +319,7 @@
 			limit: (search_params.limit) ? search_params.limit : 100,
 			tags: (ZiggeoWP.videowalls.walls[id].tags) ? ZiggeoWP.videowalls.walls[id].tags : "",
 			skip: (search_params.skip) ? search_params.skip : 0,
-			approved: ZiggeoWP.videowalls.walls[id].status
+			approved: ZiggeoWP.videowalls.walls[id].indexing.status
 		}
 
 		//reference to wall
