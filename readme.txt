@@ -2,8 +2,8 @@
 Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 5.6
-Stable tag: 1.7
+Tested up to: 5.8.1
+Stable tag: 1.8
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,8 +184,8 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
-= 1.7 =
-* Fix: Added a fix that resolves the videowall not grabbing the right information for getting the videos through index.
+= 1.8 =
+* Improvement: Chessboard grid videowall template is now behaving properly - in a chess type manner.
 
 == Changelog ==
 

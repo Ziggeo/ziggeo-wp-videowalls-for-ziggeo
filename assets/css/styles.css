@@ -162,6 +162,69 @@ INDEX:
 		clear:both;
 	}
 
+	.ziggeo-wall-chessboardGrid {
+		/*background-color: brown;*/
+		text-align: center;
+		padding: 10px;
+		box-sizing: border-box;
+		border-width: 4px;
+		border-style: outset;
+		border-color: brown;
+		position: relative;
+		background-image: url('./../images/wood-330.jpeg');
+	}
+
+	.ziggeo-wall-chessboardGrid ziggeoplayer {
+		margin: 5px;
+	}
+
+	.videowalls_chessboard_grid_row {
+		display: block;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		overflow: hidden;
+		vertical-align: top;
+		min-height: 100%;
+		height: 100%;
+	}
+
+	.chessboard_field {
+		width: 12.5%;
+		display: inline-flex;
+		justify-content: center;
+		vertical-align: middle;
+		flex-direction: column;
+	}
+
+	.chessboard_field.white_field {
+		background-color: rgba(255,255,255,0.8);
+	}
+
+	.chessboard_field.black_field {
+		background-color: rgba(0,0,0,0.8);
+	}
+
+	/* Make the player big once it starts to play */
+	.videowalls_playing {
+		position: absolute;
+		left: 20px;
+		top: 20px;
+		bottom: 20px;
+		right: 20px;
+		z-index: 20;
+	}
+
+	.videowalls_playing video {
+		height: 100%;
+	}
+
+	/* Effects after the video has played or on entry */
+	.videowalls_effect_hide {
+		opacity: 0;
+		transition: 2s all ease-in-out;
+	}
 
 
 

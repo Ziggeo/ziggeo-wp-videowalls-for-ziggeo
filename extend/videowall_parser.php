@@ -132,12 +132,14 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 
 		$autoplaytype = '';
 
-		if($wall['autoplay'] === true) {
+		if($wall['autoplay'] === true || $wall['autoplay'] === 'true') {
+			$wall['autoplay'] = true; // Just to make it easier
+
 			//autoplay is set, so we check if any of the other 2 options are set as well:
-			if($wall['autoplay-continue-end'] === true) {
+			if($wall['autoplay-continue-end'] === true || $wall['autoplay-continue-end'] === 'true') {
 				$autoplaytype = 'continue-end';
 			}
-			elseif($wall['autoplay-continue-run'] === true) {
+			elseif($wall['autoplay-continue-run'] === true || $wall['autoplay-continue-run'] === 'true') {
 				$autoplaytype = 'continue-run';
 			}
 		}
