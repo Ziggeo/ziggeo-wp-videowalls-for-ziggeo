@@ -1,5 +1,8 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.8 =
+* Improvement: Chessboard grid videowall template is now behaving properly - in a chess type manner.
+
 = 1.7 =
 * Fix: Added a fix that resolves the videowall not grabbing the right information for getting the videos through index.
 

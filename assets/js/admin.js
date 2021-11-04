@@ -14,7 +14,7 @@
 
 jQuery(document).ready( function() {
 	//Detect if we are within the Ziggeo Video settings
-	if(document.getElementById('ziggeo-tab_id_general')) {
+	if(document.getElementById('ziggeo-tab_id_general') || document.getElementById('ziggeo-tab_templates')) {
 		videowallszPUIHooksInit();
 	}
 });
