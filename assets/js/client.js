@@ -20,6 +20,15 @@
 //	4. Endless Walls
 //		* videowallszUIVideoWallEndlessAddVideos()
 //		* videowallszUIVideoWallEndlessOnScroll()
+//		* videowallszUIVideoWallEndlessOnScrollUnsubscribe
+//		> Chessboard Grid Walls
+//		* videowallszUIAddVideoToChessboardGrid()
+//		* videowallszUIPChessBoardGridPlayerBig()
+//		* videowallszUIPChessBoardGridPlayerSmall()
+//		* videowallszUIPChessBoardGridVideoAdd()
+//		* videowallszUIChessBoardGridRandomField()
+//		> Mosaic Grid Walls
+//		* videowallszUIAddVideoToMosaicGrid()
 //	5. "Static" Walls
 //		* videowallszUIVideoWallPagedAddVideos()
 //		* videowallszUIVideoWallPagedShowPage()
@@ -851,6 +860,80 @@
 // 4. ENDLESS WALLS
 /////////////////////////////////////////////////
 
+	// function to handle the video walls without the pagination, having the endless scroll implementation base..
+	function videowallszUIVideoWallEndlessAddVideos(wall, id, wall_data, _new) {
+
+		//Chessboard grid
+		if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
+			return videowallszUIAddVideoToChessboardGrid(wall, id, wall_data, _new);
+		}
+		else {
+			//Mosaic grid codes..
+			//if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
+			return videowallszUIAddVideoToMosaicGrid(wall, id, wall_data, _new);
+		}
+	}
+
+	//handler for the scroll event, so that we can do our stuff for the endless scroll templates
+	function videowallszUIVideoWallEndlessOnScroll() {
+
+		var wall = null;
+
+		//get reference to the wall..
+		if( ZiggeoWP && ZiggeoWP.videowalls.walls && ZiggeoWP.videowalls.endless &&
+			(wall = document.getElementById(ZiggeoWP.videowalls.endless)) ) {
+			//all good
+			var id = ZiggeoWP.videowalls.endless;
+
+			// Make sure it is not chessboard grid as it has different ways of adding videos
+			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
+				videowallszUIVideoWallEndlessOnScrollUnsubscribe();
+				return false;
+			}
+		}
+		else {
+			//OK so there is obviously no wall. Instead of recreating the same check each time, lets clean up..
+			videowallszUIVideoWallEndlessOnScrollUnsubscribe();
+			return false;
+		}
+
+		//lets go out if we are already processing the same request and scroll happened again..
+		if(ZiggeoWP.videowalls.walls[id].processing === true) {
+			return false;
+		}
+
+		//lets check the position of the bottom of the video wall from the top of the screen and then, if the same is equal to or lower than 80% of our video wall, we need to do some new things
+		if(wall.getBoundingClientRect().bottom <= ( wall.getBoundingClientRect().height * 0.20 )) {
+			//lets lock the indexing to not be called more than once for same scroll action..
+			ZiggeoWP.videowalls.walls[id].processing = true;
+
+			if(ZiggeoWP.videowalls.walls[id]['loaded_data']) {
+				//do we have more data than we need to show? if we do, lets show it right away, if not, we should load more data and show what we have as well..
+				if(ZiggeoWP.videowalls.walls[id]['loaded_data'].length > ZiggeoWP.videowalls.walls[id].indexing.perPage) {
+					//we use the data we already got from our servers
+					videowallszUIVideoWallEndlessAddVideos(wall, id, ZiggeoWP.videowalls.walls[id]['loaded_data']);
+					ZiggeoWP.videowalls.walls[id].processing = false;
+				}
+				else {
+					//we are using any data that we already have and create a call to grab new ones as well.
+					videowallszUIVideoWallEndlessAddVideos(wall, id, ZiggeoWP.videowalls.walls[id]['loaded_data']);
+					videowallszUIVideoWallShow(id, { skip: ZiggeoWP.videowalls.walls[id]['continueFrom'] });
+				}
+			}
+		}
+	}
+
+	// Function that helps us to no longer listen to the scroll event
+	function videowallszUIVideoWallEndlessOnScrollUnsubscribe() {
+		(document.removeEventListener) ? (
+			window.removeEventListener( 'scroll',  videowallszUIVideoWallEndlessOnScroll ) ) : (
+			window.detachEvent( 'onscroll', videowallszUIVideoWallEndlessOnScroll) );
+	}
+
+
+	// Chessboard Grid
+	////////////////////
+
 	// This function is used to add videos to your videowall with a Chessboard Grid design.
 	// Like Chessboard this is designed to be 8 x 8 grid which means 64 videos per board. All videos will 
 	function videowallszUIAddVideoToChessboardGrid(wall, id, wall_data, _new) {
@@ -1205,237 +1288,172 @@
 	}
 
 
-	// function to handle the video walls without the pagination, having the endless scroll implementation base..
-	function videowallszUIVideoWallEndlessAddVideos(wall, id, wall_data, _new) {
+	// Mosaic Grid
+	////////////////
 
-		var html = wall;
+	// Function that helps us add the video to the Mosaic Grid walls
+	function videowallszUIAddVideoToMosaicGrid(wall, id, wall_data, _new) {
 
-		var usedVideos = 0;
+		var used_videos = 0;
 		var j = wall_data.length;
 
 		if(ZiggeoWP.videowalls.walls[id]['loaded_data'] && _new === true) {
 			j -= ZiggeoWP.videowalls.walls[id]['loaded_data'].length;
 		}
 
-		//Chessboard grid
-		if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
-			return videowallszUIAddVideoToChessboardGrid(wall, id, wall_data, _new);
+		if(!ZiggeoWP.videowalls.walls[id].indexing.max_row) {
+			//variable holding the maximum number of videos that will be in the mosaic row
+			var _mosaic_row_max = Math.floor(Math.random() * 3) + 2;
+
+			var cols = wall.getElementsByClassName('mosaic_col');
+
+			if(cols === undefined || cols.length == 0) {
+				//This is already made, otherwise we need to do it now..
+				for(_mi = 0; _mi < _mosaic_row_max; _mi++) {	
+					var _m_col = document.createElement('div');
+					_m_col.className = 'mosaic_col';
+					wall.appendChild(_m_col);
+				}
+			}
+
+			ZiggeoWP.videowalls.walls[id].indexing.max_row = _mosaic_row_max;
+
+			//set the class on wall with the number of rows we have..
+			wall.className += ' wall_' + _mosaic_row_max + '_' + (Math.floor(Math.random() * 4)+1) + '_cols';
 		}
 		else {
-			//Mosaic grid codes..
+			var _mosaic_row_max = ZiggeoWP.videowalls.walls[id].indexing.max_row;
+		}
+
+		//variable holding the current video (position) in the current row
+		var _mosaic_row_count = 0;
+		var _mosaic_rows = wall.querySelectorAll('.mosaic_col');
+
+		for(i = 0, tmp=''; i < j; i++, tmp='', _mosaic_row_count++) {
+
+			//break once we load enough of videos
+			if(i >= ZiggeoWP.videowalls.walls[id].indexing.perPage) {
+				break;
+			}
+
+			var codes = {
+				player: '',
+				additional: ''
+			};
+
 			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
-
-				if(!ZiggeoWP.videowalls.walls[id].indexing.max_row) {
-					//variable holding the maximum number of videos that will be in the mosaic row
-					var _mosaic_row_max = Math.floor(Math.random() * 3) + 2;
-
-					var cols = wall.getElementsByClassName('mosaic_col');
-
-					if(cols === undefined || cols.length == 0) {
-						//This is already made, otherwise we need to do it now..
-						for(_mi = 0; _mi < _mosaic_row_max; _mi++) {	
-							var _m_col = document.createElement('div');
-							_m_col.className = 'mosaic_col';
-							wall.appendChild(_m_col);
-						}
-					}
-
-					ZiggeoWP.videowalls.walls[id].indexing.max_row = _mosaic_row_max;
-
-					//set the class on wall with the number of rows we have..
-					wall.className += ' wall_' + _mosaic_row_max + '_' + (Math.floor(Math.random() * 4)+1) + '_cols';
-				}
-				else {
-					var _mosaic_row_max = ZiggeoWP.videowalls.walls[id].indexing.max_row;
-				}
-			}
-
-			//variable holding the current video (position) in the current row
-			var _mosaic_row_count = 0;
-			var _mosaic_rows = html.querySelectorAll('.mosaic_col');
-
-			for(i = 0, tmp=''; i < j; i++, tmp='', _mosaic_row_count++) {
-
-				//break once we load enough of videos
-				if(i >= ZiggeoWP.videowalls.walls[id].indexing.perPage) {
-					break;
+				//See if we need to go to new row
+				if(_mosaic_row_max === _mosaic_row_count) {
+					_mosaic_row_count = 0;
 				}
 
-				var codes = {
-					player: '',
-					additional: ''
-				};
-
-				if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
-					//See if we need to go to new row
-					if(_mosaic_row_max === _mosaic_row_count) {
-						_mosaic_row_count = 0;
-					}
-
-					codes.player += ' ziggeo-width="100%"';
-				}
-				else {
-					codes.player += ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
-									' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height;
-				}
-
-				codes.player += ' ziggeo-video="' + wall_data[i].token + '"' +
-								( (usedVideos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay &&
-									ZiggeoWP.videowalls.walls[id].indexing.fresh === true) ? ' ziggeo-autoplay ' : '' );
-
-				//in case we need to add the class to it
-				if(ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== "" &&
-					ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== false) {
-					codes.player += ' class="ziggeo-autoplay-' +
-						( ( ZiggeoWP.videowalls.walls[id].videos.autoplaytype === 'continue-end' ) ? 'continue-end' : 'continue-run' ) +
-						'"';
-				}
-
-				//Set the orientation
-				if(wall_data[i].wordpress) {
-					codes.additional = ' data-orientation="' + wall_data[i].wordpress.orientation + '"';
-				}
-
-				//Stretch * Note: This will be removed since it is removed (no longer needed) from JS SDK in r38
-				if(ZiggeoWP.videowalls.walls[id].videos.stretch !== false &&
-					ZiggeoWP.videowalls.walls[id].videos.stretch !== '') {
-					if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'both') {
-						codes.player += ' ziggeo-stretch';
-					}
-					if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_height') {
-						codes.player += ' ziggeo-stretchheight';
-					}
-					if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_width') {
-						codes.player += ' ziggeo-stretchwidth';
-					}
-				}
-
-				//Two for a reason. First is global and true to all videowalls
-				//Second is specific for the endless walls. Use one or the other.
-				ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
-				ZiggeoWP.hooks.fire('videowallsz_endlesswall_video_add', codes);
-
-				//finalize the embedding
-				var tmp_embedding = '<ziggeoplayer ' + codes.player  + codes.additional + '></ziggeoplayer>';
-
-				if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
-					//@ADD - sort option as bellow, this is just a quick test
-
-					if(_new === false) {
-						_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('afterbegin', tmp_embedding);
-					}
-					else {
-						_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
-					}
-					//html.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
-					usedVideos++;
-					wall_data[i] = null;//so that it is not used by other ifs..
-				}
-				else {
-					//We could add the check if the video should be added at the front or at the back..
-					// at this time we will just add it at the front.
-					if(_new == false) {
-						html.insertAdjacentHTML('afterbegin', tmp_embedding);
-					}
-					else {
-						html.insertAdjacentHTML('beforeend', tmp_embedding);
-					}
-					usedVideos++;
-					wall_data[i] = null;//so that it is not used by other ifs..
-				}
-			}
-
-			var tmp = document.getElementById('ziggeo-endless-loading_more');
-
-			if(tmp) {
-				tmp.parentNode.removeChild(tmp);
+				codes.player += ' ziggeo-width="100%"';
 			}
 			else {
-				var loading_elm = document.createElement('div');
-				loading_elm.id = "ziggeo-endless-loading_more";
-
-				var info = {
-					element_ref: loading_elm,
-					text:"Loading More Videos.."
-				};
-
-				//Allows you to change the text if you wanted, or use the referene to element to apply class, etc.
-				ZiggeoWP.hooks.fire('videowallsz_wall_loading_more_text', info);
-
-				loading_elm.innerHTML = info.text;
-
-				wall.parentNode.appendChild(loading_elm, wall);
+				codes.player += ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
+								' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height;
 			}
 
-			ZiggeoWP.videowalls.endless = id;
+			codes.player += ' ziggeo-video="' + wall_data[i].token + '"' +
+							( (used_videos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay &&
+								ZiggeoWP.videowalls.walls[id].indexing.fresh === true) ? ' ziggeo-autoplay ' : '' );
 
-			for(i = -1, j = wall_data.length; i < j; j--) {
-				//break once we load enought of videos
-				if(wall_data[j] === null) {
-					wall_data.splice(j, 1);
+			//in case we need to add the class to it
+			if(ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== "" &&
+				ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== false) {
+				codes.player += ' class="ziggeo-autoplay-' +
+					( ( ZiggeoWP.videowalls.walls[id].videos.autoplaytype === 'continue-end' ) ? 'continue-end' : 'continue-run' ) +
+					'"';
+			}
+
+			//Set the orientation
+			if(wall_data[i].wordpress) {
+				codes.additional = ' data-orientation="' + wall_data[i].wordpress.orientation + '"';
+			}
+
+			//Stretch * Note: This will be removed since it is removed (no longer needed) from JS SDK in r38
+			if(ZiggeoWP.videowalls.walls[id].videos.stretch !== false &&
+				ZiggeoWP.videowalls.walls[id].videos.stretch !== '') {
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'both') {
+					codes.player += ' ziggeo-stretch';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_height') {
+					codes.player += ' ziggeo-stretchheight';
+				}
+				if(ZiggeoWP.videowalls.walls[id].videos.stretch === 'by_width') {
+					codes.player += ' ziggeo-stretchwidth';
 				}
 			}
 
-			// These are the videos that were retrieved from server, yet never used, so we can use them as needed.
-			if(wall_data.length > 0) {
-				ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
-			}
-		}
-	}
+			//Two for a reason. First is global and true to all videowalls
+			//Second is specific for the endless walls. Use one or the other.
+			ZiggeoWP.hooks.fire('videowallsz_wall_video_add', codes);
+			ZiggeoWP.hooks.fire('videowallsz_endlesswall_video_add', codes);
 
-	// Function that helps us to no longer listen to the scroll event
-	function videowallszUIVideoWallEndlessOnScrollUnsubscribe() {
-		(document.removeEventListener) ? (
-			window.removeEventListener( 'scroll',  videowallszUIVideoWallEndlessOnScroll ) ) : (
-			window.detachEvent( 'onscroll', videowallszUIVideoWallEndlessOnScroll) );
-	}
+			//finalize the embedding
+			var tmp_embedding = '<ziggeoplayer ' + codes.player  + codes.additional + '></ziggeoplayer>';
 
-	//handler for the scroll event, so that we can do our stuff for the endless scroll templates
-	function videowallszUIVideoWallEndlessOnScroll() {
+			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
+				//@ADD - sort option as bellow, this is just a quick test
 
-		var wall = null;
-
-		//get reference to the wall..
-		if( ZiggeoWP && ZiggeoWP.videowalls.walls && ZiggeoWP.videowalls.endless &&
-			(wall = document.getElementById(ZiggeoWP.videowalls.endless)) ) {
-			//all good
-			var id = ZiggeoWP.videowalls.endless;
-
-			// Make sure it is not chessboard grid as it has different ways of adding videos
-			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'chessboard_grid') {
-				videowallszUIVideoWallEndlessOnScrollUnsubscribe();
-				return false;
-			}
-		}
-		else {
-			//OK so there is obviously no wall. Instead of recreating the same check each time, lets clean up..
-			videowallszUIVideoWallEndlessOnScrollUnsubscribe();
-			return false;
-		}
-
-		//lets go out if we are already processing the same request and scroll happened again..
-		if(ZiggeoWP.videowalls.walls[id].processing === true) {
-			return false;
-		}
-
-		//lets check the position of the bottom of the video wall from the top of the screen and then, if the same is equal to or lower than 80% of our video wall, we need to do some new things
-		if(wall.getBoundingClientRect().bottom <= ( wall.getBoundingClientRect().height * 0.20 )) {
-			//lets lock the indexing to not be called more than once for same scroll action..
-			ZiggeoWP.videowalls.walls[id].processing = true;
-
-			if(ZiggeoWP.videowalls.walls[id]['loaded_data']) {
-				//do we have more data than we need to show? if we do, lets show it right away, if not, we should load more data and show what we have as well..
-				if(ZiggeoWP.videowalls.walls[id]['loaded_data'].length > ZiggeoWP.videowalls.walls[id].indexing.perPage) {
-					//we use the data we already got from our servers
-					videowallszUIVideoWallEndlessAddVideos(wall, id, ZiggeoWP.videowalls.walls[id]['loaded_data']);
-					ZiggeoWP.videowalls.walls[id].processing = false;
+				if(_new === false) {
+					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('afterbegin', tmp_embedding);
 				}
 				else {
-					//we are using any data that we already have and create a call to grab new ones as well.
-					videowallszUIVideoWallEndlessAddVideos(wall, id, ZiggeoWP.videowalls.walls[id]['loaded_data']);
-					videowallszUIVideoWallShow(id, { skip: ZiggeoWP.videowalls.walls[id]['continueFrom'] });
+					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 				}
+				//wall.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+				used_videos++;
+				wall_data[i] = null;//so that it is not used by other ifs..
 			}
+			else {
+				//We could add the check if the video should be added at the front or at the back..
+				// at this time we will just add it at the front.
+				if(_new == false) {
+					wall.insertAdjacentHTML('afterbegin', tmp_embedding);
+				}
+				else {
+					wall.insertAdjacentHTML('beforeend', tmp_embedding);
+				}
+				used_videos++;
+				wall_data[i] = null;//so that it is not used by other ifs..
+			}
+		}
+
+		var tmp = document.getElementById('ziggeo-endless-loading_more');
+
+		if(tmp) {
+			tmp.parentNode.removeChild(tmp);
+		}
+		else {
+			var loading_elm = document.createElement('div');
+			loading_elm.id = "ziggeo-endless-loading_more";
+
+			var info = {
+				element_ref: loading_elm,
+				text:"Loading More Videos.."
+			};
+
+			//Allows you to change the text if you wanted, or use the referene to element to apply class, etc.
+			ZiggeoWP.hooks.fire('videowallsz_wall_loading_more_text', info);
+
+			loading_elm.innerHTML = info.text;
+
+			wall.parentNode.appendChild(loading_elm, wall);
+		}
+
+		ZiggeoWP.videowalls.endless = id;
+
+		for(i = -1, j = wall_data.length; i < j; j--) {
+			//break once we load enought of videos
+			if(wall_data[j] === null) {
+				wall_data.splice(j, 1);
+			}
+		}
+
+		// These are the videos that were retrieved from server, yet never used, so we can use them as needed.
+		if(wall_data.length > 0) {
+			ZiggeoWP.videowalls.walls[id]['loaded_data'] = wall_data;
 		}
 	}
 
@@ -1452,7 +1470,7 @@
 		//number of videos per page currently
 		var currentVideosPageCount = 0;
 		//total number of videos that will be shown
-		var usedVideos = 0;
+		var used_videos = 0;
 		//What page are we on?
 		var currentPage = 0;
 		//did any videos match the checks while listing them - so that we do not place multiple pages since the count stays on 0
@@ -1469,7 +1487,7 @@
 			codes.player = ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
 							' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height +
 							' ziggeo-video="' + wall_data[i].token + '"' +
-							( (usedVideos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay) ? ' ziggeo-autoplay ' : '' );
+							( (used_videos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay) ? ' ziggeo-autoplay ' : '' );
 
 			//in case we need to add the class to it
 			if(ZiggeoWP.videowalls.walls[id].videos.autoplaytype !== "") {
@@ -1505,7 +1523,7 @@
 			var tmp_embedding = '<ziggeoplayer ' + codes.player + codes.additional + '></ziggeoplayer>';
 
 			tmp += tmp_embedding;
-			usedVideos++;
+			used_videos++;
 			currentVideosPageCount++;
 			//wall_data[i] = null;//so that it is not used by other ifs..
 
@@ -1561,7 +1579,7 @@
 
 		//Sometimes we will have videos, however due to calling parameters the same might not be added.
 		//At this time we would need to show the log in console about the same and show the on_no_videos message / setup
-		if(usedVideos === 0 && i > 0) {
+		if(used_videos === 0 && i > 0) {
 			html = videowallszUIVideoWallNoVideos(id, html);
 
 			//leaving a note of this

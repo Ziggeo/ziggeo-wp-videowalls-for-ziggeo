@@ -1,5 +1,8 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.8.2 =
+* Support: Small change has been made to support the new location of the Templates Editor. If you update the videowall it will still support the old location as well.
+
 = 1.8 =
 * Improvement: Chessboard grid videowall template is now behaving properly - in a chess type manner.
 

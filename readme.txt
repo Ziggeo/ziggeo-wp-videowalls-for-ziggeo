@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 5.8.1
-Stable tag: 1.8.2
+Stable tag: 1.9
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -184,8 +184,9 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
-= 1.8.2 =
-* Support: Small change has been made to support the new location of the Templates Editor. If you update the videowall it will still support the old location as well.
+= 1.9 =
+* Improvement: The code for mosaic grid has been improved to make sure the chessboard grid and mosaic grid designs use their own codes, allowing easier maintenance later on.
+* Improvement: The mosaic grid also got some new colors to make it more interesting. Easy to change by removing few lines of CSS.
 
 == Changelog ==
 

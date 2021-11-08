@@ -234,9 +234,13 @@ INDEX:
 
 	.ziggeo-wall-mosaicGrid ziggeoplayer {
 		/*display: inline-block;*/
-		float: left;
-		margin: 0;
+		/*float: left;*/
+		margin: 10px 0px;
 		box-sizing: border-box;
+	}
+
+	.ziggeo-wall-mosaicGrid .ba-videoplayer-video-poster {
+		background-color: none;
 	}
 
 	.ziggeo-wall-mosaicGrid .mosaic_col {
@@ -244,9 +248,29 @@ INDEX:
 		height: auto;
 		display: inline-block;
 		margin: 0;
-		padding: 0;
+		/*padding: 0;*/
 		vertical-align: top;
 		box-sizing: border-box;
+		padding: 20px;
+	}
+
+	.ziggeo-wall-mosaicGrid .mosaic_col:nth-child(1) {
+		background-color: tomato;
+		background-image: linear-gradient(90deg, tomato, aquamarine);
+	}
+
+	.ziggeo-wall-mosaicGrid .mosaic_col:nth-child(2) {
+		background-color: aquamarine;
+	}
+
+	.ziggeo-wall-mosaicGrid .mosaic_col:nth-child(3) {
+		background-color: navajowhite;
+		background-image: linear-gradient(90deg, aquamarine, navajowhite, navajowhite);
+	}
+
+	.ziggeo-wall-mosaicGrid .mosaic_col:nth-child(4) {
+		background-color: violet;
+		background-image: linear-gradient(90deg, navajowhite,violet);
 	}
 
 	/* Mosaic 4 rows */
