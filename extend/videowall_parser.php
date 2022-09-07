@@ -17,6 +17,9 @@ function videowallsz_get_wall_placeholder($inline_styles) {
 	);
 }
 
+add_filter('ziggeo_template_parser_type_ziggeovideowall', function($template) {
+	return videowallsz_content_parse_videowall($template, false);
+});
 
 //$post_code - to see if we should post the code to the page or return it back
 function videowallsz_content_parse_videowall($template, $post_code = true) {
@@ -197,70 +200,67 @@ function videowallsz_content_parse_videowall($template, $post_code = true) {
 		$ret .= '<script type="text/javascript" class="runMe">' .
 				//This helps us create js code that works as is and uses the variable data from these outputs instead of outputting the data into the code each time - and adding JS directly to the page.
 
-			'videowallszCreateWall("' . $wallID . '", {
-					videos: {
-						width: "' . $wall['video_width'] . '",
-						height: "' . $wall['video_height'] . '",
-						autoplay: ' . $wall['autoplay'] . ',
-						autoplaytype: "' . $autoplaytype . '",
-						stretch: "' . $wall['video_stretch'] . '"
-					},
-					indexing: {
-						perPage: ' . $wall['videos_per_page'] . ',
-						status: "' . $wall['show_videos'] . '",
-						design: "' . $wall['wall_design'] . '",';
-			$ret .=		'
-						fresh: true,
-						auto_refresh: ' . (int)$wall['auto_refresh'] . '
-					},
-					onNoVideos: {
-						showTemplate: ' . $showtemplate . ',
-						message: "' . $wall['message'] . '",
-						templateName: "' . $wall['template_name'] . '",
-						hideWall: ' . $wall['hide_wall'] . '
-					},
-					title: \'' . $wall['title'] . '\',
-					tags: "' . $wall_tags . '"' . //the tags to look the video by based on template setup
-				'});
-		</script>';
+			'videowallszCreateWall(\'' . $wallID . '\', {' .
+					'videos: {' .
+						'width: \'' . $wall['video_width'] . '\',' .
+						'height: \'' . $wall['video_height'] . '\',' .
+						'autoplay: ' . $wall['autoplay'] . ',' .
+						'autoplaytype: \'' . $autoplaytype . '\',' .
+						'stretch: \'' . $wall['video_stretch'] . '\'' .
+					'},' .
+					'indexing: {' .
+						'perPage: ' . $wall['videos_per_page'] . ',' .
+						'status: \'' . $wall['show_videos'] . '\',' .
+						'design: \'' . $wall['wall_design'] . '\',' .
+						'fresh: true,' .
+						'auto_refresh: ' . (int)$wall['auto_refresh'] .
+					'},' .
+					'onNoVideos: {' .
+						'showTemplate: ' . $showtemplate . ',' .
+						'message: \'' . $wall['message'] . '\',' .
+						'templateName: \'' . $wall['template_name'] . '\',' .
+						'hideWall: ' . $wall['hide_wall'] .
+					'},' .
+					'title: \'' . $wall['title'] . '\',' .
+					'tags: \'' . $wall_tags . '\'' . //the tags to look the video by based on template setup
+				'});' .
+		'</script>';
 
 		//Video wall will by default only show when the video comment is submitted, unless this is overridden by the `show` parameter
 		if( !isset($wall['show']) ) {
 			//wait for video submission first
-			$ret .= '
-			<script type="text/javascript" class="runMe">' .
+			$ret .= '<script type="text/javascript" class="runMe">' .
 					//just to make sure that it is available
 					//we could add to check the embedding in order to fire only if right embedding is shown..
 					//There are different ways our code can be added, this should cover all cases.
-				'setTimeout(function() {
-					if(typeof ziggeo_app !== "undefined") {
-						ziggeo_app.embed_events.on("verified", function (embedding) {
-							videowallszUIVideoWallShow("' . $wallID . '");
-						});
-					}' .
+				'setTimeout(function() {' .
+					'if(typeof ziggeo_app !== "undefined") {' .
+						'ziggeo_app.embed_events.on("verified", function (embedding) {' .
+							'videowallszUIVideoWallShow("' . $wallID . '");' .
+						'});' .
+					'}' .
 					//lets wait for a second and try again.
-					'else {
-						setTimeout( function(){
-							ziggeo_app.embed_events.on("verified", function (embedding) {
-								videowallszUIVideoWallShow("' . $wallID . '");
-							});
-						}, 10000 );' .
+					'else {' .
+						'setTimeout( function(){' .
+							'ziggeo_app.embed_events.on("verified", function (embedding) {' .
+								'videowallszUIVideoWallShow("' . $wallID . '");' .
+							'});' .
+						'}, 10000 );' .
 						//10 seconds should be enough for page to load and we do not need to have this set up right away.
-					'}
-				}, 4000);
-			</script>';
+					'}' .
+				'}, 4000);' .
+			'</script>';
 		}
 		else {
 			//video wall must be shown right away..
-			$ret .= '
-			<script type="text/javascript" class="runMe">
-				jQuery(document).ready( function () {' .
+			$ret .= '<script type="text/javascript" class="runMe">' .
+				'jQuery(document).ready( function () {' .
 					//Turns out we sometimes need a bit more time (needed for some integrations)
-					'setTimeout(function(){
-						videowallszUIVideoWallShow("' . $wallID . '");
-					}, ' . $wall['show_delay'] . ');
-				});
-			</script>';
+					'setTimeout(function(){' .
+						'videowallszUIVideoWallShow("' . $wallID . '");' .
+					'}, ' . $wall['show_delay'] . ');' .
+				'});' .
+			'</script>';
 		}
 
 		if($post_code === true) {
