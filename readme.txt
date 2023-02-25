@@ -126,12 +126,13 @@ There are several ways to power your WordPress with video recording and video pl
 
 == Screenshots ==
 
-1. Paged wall
-2. Slidewall
-3. Gridwall
-4. Mosaic Wall
-5. Videosite Playlist Wall
-6. Core plugin Template editor integration - videowall templates setup
+1. Videowall Design "Paged wall"
+2. Videowall Design: "Slidewall"
+3. Videowall Design: "Mosaic Grid" Wall (Endless - adds more videos on scroll)
+4. Videowall Design: "ChessBoard Grid" Wall
+5. Videowall Design: "Videosite Playlist" Wall: (Desktop layout)
+6. Videowall Design: "Videosite Playlist" Wall: (Mobile layout)
+7. Core plugin Template editor integration - videowall templates setup
 
 
 == FAQ ==
@@ -188,6 +189,7 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 * Improvement: videowallsz_content_parse_videowall now returns code by default (was echoing it)
 * Added: Support for the Core plugin Lazyload option
 * Improvement: Updated parameters info to be more precise for use in new templates editor
+* Improvement: Added a more responsive layout for the videosite_playlist videowall
 
 == Changelog ==
 

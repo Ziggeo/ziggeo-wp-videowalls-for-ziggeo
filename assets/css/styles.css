@@ -413,3 +413,24 @@ INDEX:
 	.videosite_playlist_side > div:nth-child(2n+1) {
 		background-color: lightgray;
 	}
+
+	/* Responsive styles */
+
+	.ziggeo-wall-VideoSitePlaylist.mobile_wall {
+		width: 100%;
+		min-width: auto;
+	}
+	.ziggeo-wall-VideoSitePlaylist.mobile_wall .videosite_playlist_main,
+	.ziggeo-wall-VideoSitePlaylist.mobile_wall .videosite_playlist_side {
+		width: 100%;
+		max-width: 100%;
+		display: block;
+	}
+	.ziggeo-wall-VideoSitePlaylist.mobile_wall .videosite_playlist_side div.img {
+		width: 120px;
+	}
+	.ziggeo-wall-VideoSitePlaylist.mobile_wall .videosite_playlist_side .video_duration {
+		right: calc(100% - 116px);
+		left: 40px;
+		bottom: 4px;
+	}

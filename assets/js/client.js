@@ -301,6 +301,20 @@
 			}
 		});
 
+		// Sets the videosite_playlist to be mobile friendly
+		// With delay to support various lazy load options
+
+		// on immediate load
+		videowallsUIVideositePlaylistMobile();
+
+		// after 2 seconds
+		setTimeout(videowallsUIVideositePlaylistMobile, 2000);
+
+		// after 5 seconds
+		setTimeout(videowallsUIVideositePlaylistMobile, 5000);
+
+		// after 10 seconds
+		setTimeout(videowallsUIVideositePlaylistMobile, 10000);
 	});
 
 
@@ -1941,6 +1955,17 @@
 		player.activate();
 	}
 
+	function videowallsUIVideositePlaylistMobile() {
+		var walls = document.getElementsByClassName('ziggeo-wall-VideoSitePlaylist');
+
+		for(i = 0, c = walls.length; i < c; i++) {
+			if(walls[i].parentElement.getBoundingClientRect().width < 920) {
+				if(walls[i].className.indexOf('mobile_wall') === -1) {
+					walls[i].className += ' mobile_wall';
+				}
+		    }
+		}
+	}
 
 
 
