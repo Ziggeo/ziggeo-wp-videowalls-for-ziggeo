@@ -62,4 +62,14 @@ function videowallszPUIHooksInit() {
 		wall_info.style.display = 'none';
 	});
 
+	//Hook to work with autocomplete control in template editor
+	ZiggeoWP.hooks.set('autocomplete-custom-base', 'videowallsz-templates-autocomplete-parameter', function(data) {
+		if(data.template_base === 'ziggeovideowall' && typeof data.item.custom_used_by !== 'undefined' && 
+					data.item.custom_used_by.indexOf('ziggeovideowall') > -1) {
+			return true;
+		}
+
+		return null;
+	});
+
 }

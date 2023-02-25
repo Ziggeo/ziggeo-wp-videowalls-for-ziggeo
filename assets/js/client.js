@@ -118,7 +118,6 @@
 		//Handle the show_pages and slide_wall videowall (paged videowalls)
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParsePagedWalls',
 			function(data) {
-
 				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
 
 				if(data.data.length === 0) {
@@ -181,7 +180,6 @@
 		//Parse the videos for the videosite_playlist videowall
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseVideositePlaylist',
 			function(data) {
-
 				if(data.data.length === 0) {
 					return false;
 				}
@@ -242,7 +240,6 @@
 		//Setting the orientation info
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIPOrinetationSet',
 			function(data) {
-
 				if(data.data.length === 0) {
 					return false;
 				}
@@ -268,7 +265,6 @@
 		//Save the latest video that we got
 		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIPFreshestVideo',
 			function(data) {
-
 				if(!ZiggeoWP.videowalls.walls[data.wall_id].indexing.last_video) {
 					ZiggeoWP.videowalls.walls[data.wall_id].indexing.last_video = null;
 				}
@@ -319,8 +315,15 @@
 	//show video wall based on its ID
 	function videowallszUIVideoWallShow(id, search_params) {
 
-		if(search_params === undefined || search_params === "undefined" || search_params === null || 
-			typeof(search_params) != "object") {
+		// support for lazy load
+		if(typeof ziggeo_app === 'undefined') {
+			setTimeout(function() {
+				videowallszUIVideoWallShow(id, search_params);
+			}, 200);
+			return false;
+		}
+
+		if(typeof search_params === "undefined" || search_params === null || typeof(search_params) != "object") {
 			search_params = {};
 		}
 
@@ -687,6 +690,7 @@
 
 	//Function helper to help us get the right format of time based on UNIX timestamp
 	function videowallszGetDateFromUnix(unix_timestamp) {
+
 		var _date = new Date(unix_timestamp * 1000);
 
 		return _date.toDateString();
@@ -694,6 +698,7 @@
 
 	//Returns the right orientation info
 	function videowallszGetOrientation(video_data) {
+
 		var width = video_data.default_stream.video_width;
 		var height = video_data.default_stream.video_height;
 

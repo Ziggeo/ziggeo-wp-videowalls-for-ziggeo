@@ -1,5 +1,8 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.10 =
+* Improvement: Added support for templates v2 supported by the core plugin, including the integration into the new editor
+
 = 1.9 =
 * Improvement: The code for mosaic grid has been improved to make sure the chessboard grid and mosaic grid designs use their own codes, allowing easier maintenance later on.
 * Improvement: The mosaic grid also got some new colors to make it more interesting. Easy to change by removing few lines of CSS.

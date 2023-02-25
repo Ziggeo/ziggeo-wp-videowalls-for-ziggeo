@@ -82,5 +82,14 @@ function videowallsz_p_get_plugin_options($specific = null) {
 	return false;
 }
 
+// a simple function to test if the code is videowall code or not
+function videowallsz_p_is_videowall_code($code = '') {
+
+	if((strpos($code, '[videowall') > -1) || (strpos($code, 'ziggeo_video_wall') > -1)) {
+		return true;
+	}
+
+	return false;
+}
 
 ?>

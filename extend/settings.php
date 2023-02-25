@@ -30,6 +30,12 @@ add_action('ziggeo_manage_template_options_pre', function($existing_templates) {
 	return $existing_templates;
 });
 
+//add videowall parameter into the list of content parsers available
+add_filter('ziggeo_content_filter_supported_codes_single', function($supported) {
+	$supported[] = 'ziggeovideowall';
+	return $supported;
+});
+
 //Add videowall parameters to the plugin
 //IMPORTANT: This has priority of 1 so that it fires as soon as possible. That way we add video wall parameters right away. If you want to add additional video wall parameters, you should have those set on the default priority instead.
 add_filter('ziggeo_template_parameters_list', function($parameters_list) {
@@ -124,7 +130,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'type'                  => 'enum',
 			'description'           => _x('Choose if you want any type of stretching being applied on the video players within the video wall.', 'videowalls-for-ziggeo'),
 			'options'                => array('none', 'all', 'by_height', 'by_width'),
-			'used_by_player'        => true,
+			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
@@ -148,9 +154,9 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'video_width' => array(
 			'type'                  => 'integer',
 			'description'           => _x('Integer value representing the width of each video in the wall', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
-			'used_by_recorder'      => true,
-			'used_by_rerecorder'    => true,
+			'used_by_player'        => false,
+			'used_by_recorder'      => false,
+			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
 			'custom_used_by'        => 'ziggeovideowall',
 			'advanced'              => true,
@@ -160,9 +166,9 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'video_height' => array(
 			'type'                  => 'integer',
 			'description'           => _x('Integer value representing the height of each video in the wall', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
-			'used_by_recorder'      => true,
-			'used_by_rerecorder'    => true,
+			'used_by_player'        => false,
+			'used_by_recorder'      => false,
+			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
 			'custom_used_by'        => 'ziggeovideowall',
 			'advanced'              => true,
@@ -222,7 +228,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'autoplay' => array(
 			'type'                  => 'bool',
 			'description'           => _x('Boolean value indicating if first video should be played automatically.', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
+			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
@@ -234,7 +240,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'autoplay-continue-end' => array(
 			'type'                  => 'bool',
 			'description'           => _x('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page (requires `autoplay`)', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
+			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
@@ -246,7 +252,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'autoplay-continue-run' => array(
 			'type'                  => 'bool',
 			'description'           => _x('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page is met, then start again (looping through all videos on the page one by one) - (requires `autoplay`)', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
+			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
@@ -258,7 +264,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'auto_refresh' => array(
 			'type'                  => 'integer',
 			'description'           => _x('Integer representing the number of seconds to wait before checking if there is any new video available. Zero turns it off', 'videowalls-for-ziggeo'),
-			'used_by_player'        => true,
+			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
 			'used_by_uploader'      => false,
