@@ -6,7 +6,7 @@ function videowallsz_validate($input) {
 
 	$allowed_options = array(
 		'enable_editor'		=> true,
-		'global_design'		=> true
+		'default_design'		=> true
 	);
 
 	if(!isset($input['enable_editor']) || $input['enable_editor'] === '0') {
@@ -16,7 +16,7 @@ function videowallsz_validate($input) {
 		$options['enable_editor'] = '1';
 	}
 
-	$options['global_design'] = $input['global_design'];
+	$options['default_design'] = $input['default_design'];
 
 	return $options;
 }

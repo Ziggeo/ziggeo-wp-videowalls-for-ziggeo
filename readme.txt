@@ -2,8 +2,8 @@
 Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 6.1.1
-Stable tag: 1.11
+Tested up to: 6.2
+Stable tag: 1.12
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -185,11 +185,9 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Upgrade notice ==
 
-= 1.11 =
-* Improvement: videowallsz_content_parse_videowall now returns code by default (was echoing it)
-* Added: Support for the Core plugin Lazyload option
-* Improvement: Updated parameters info to be more precise for use in new templates editor
-* Improvement: Added a more responsive layout for the videosite_playlist videowall
+= 1.12 =
+* Added: filter for core plugin pre-render support
+* Modified: The wording for the default wall design is set to make it more clear it is default design
 
 == Changelog ==
 

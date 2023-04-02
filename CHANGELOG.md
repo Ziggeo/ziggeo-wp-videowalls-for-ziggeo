@@ -1,5 +1,11 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.11 =
+* Improvement: videowallsz_content_parse_videowall now returns code by default (was echoing it)
+* Added: Support for the Core plugin Lazyload option
+* Improvement: Updated parameters info to be more precise for use in new templates editor
+* Improvement: Added a more responsive layout for the videosite_playlist videowall
+
 = 1.10 =
 * Improvement: Added support for templates v2 supported by the core plugin, including the integration into the new editor
 

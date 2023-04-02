@@ -36,10 +36,8 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 		}
 	}
 
-
 	$wall = videowallsz_videowall_parameter_values($template);
 	$wall = videowallsz_p_populate_template($wall);
-
 
 	//To set up the wall inline style
 	$wall_styles = '';

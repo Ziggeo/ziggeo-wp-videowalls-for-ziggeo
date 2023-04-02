@@ -10,7 +10,7 @@
 //		2.1. videowallsz_show_form()
 //		2.2. videowallsz_o_section()
 //		2.3. videowallsz_o_enable_editor()
-//		2.4. videowallsz_o_global_design()
+//		2.4. videowallsz_o_default_design()
 
 
 //Checking if WP is running or if this is a direct call..
@@ -34,7 +34,7 @@ defined('ABSPATH') or die();
 															'sanitize_callback' => 'videowallsz_validate',
 															'default'			=> array(
 																'enable_editor'		=> '1',
-																'global_design'		=> 'slide_wall'
+																'default_design'		=> 'slide_wall'
 															)
 		));
 
@@ -50,9 +50,9 @@ defined('ABSPATH') or die();
 								'videowallsz_o_section');
 
 			// 
-			add_settings_field('videowallsz_global_design',
-								__('Global design', 'videowallsz'),
-								'videowallsz_o_global_design',
+			add_settings_field('videowallsz_default_design',
+								__('Default design', 'videowallsz'),
+								'videowallsz_o_default_design',
 								'videowallsz',
 								'videowallsz_o_section');
 	});
@@ -120,18 +120,18 @@ defined('ABSPATH') or die();
 				<?php
 			}
 
-			function videowallsz_o_global_design() {
-				$option = videowallsz_p_get_plugin_options('global_design');
+			function videowallsz_o_default_design() {
+				$option = videowallsz_p_get_plugin_options('default_design');
 
 				?>
-				<select id="videowallsz_global_design" name="videowallsz[global_design]">
+				<select id="videowallsz_default_design" name="videowallsz[default_design]">
 					<option <?php echo ($option === 'slide_wall')? 'selected="selected"' : ''; ?> value="slide_wall">Slide Wall</option>
 					<option <?php echo ($option === 'show_pages')? 'selected="selected"' : ''; ?> value="show_pages">Show Pages</option>
 					<option <?php echo ($option === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
 					<option <?php echo ($option === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
 					<option <?php echo ($option === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
 				</select>
-				<label for="videowallsz_global_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
+				<label for="videowallsz_default_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
 				<?php
 			}
 

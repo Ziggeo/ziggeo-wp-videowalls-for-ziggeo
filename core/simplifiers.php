@@ -48,7 +48,7 @@ function videowallsz_p_populate_template($template) {
 function videowallsz_p_get_plugin_options_defaults() {
 	$defaults = array(
 		'enable_editor'			=> '1',
-		'global_design'			=> 'slide_wall'
+		'default_design'		=> 'slide_wall'
 	);
 
 	return $defaults;
@@ -91,5 +91,23 @@ function videowallsz_p_is_videowall_code($code = '') {
 
 	return false;
 }
+
+// Code that runs only when the plugin is running
+add_action('videowalls_for_ziggeo_running', function() {
+
+	// We use this filter to tell the core plugin that the videowall templates should not be pre-rendered
+	// * note: At this time pre-rendering this type of templates will output HTML and JS code, so it needs
+	// to be handled in a bit different manner
+	add_filter('ziggeo_template_validation_pre_render', function($base, $should_prerender) {
+		switch(strtolower($base)) {
+			case '[ziggeovideowall':
+				return false;
+				break;
+			default:
+				return $base;
+				break;
+		}
+	}, 10, 2);
+});
 
 ?>
