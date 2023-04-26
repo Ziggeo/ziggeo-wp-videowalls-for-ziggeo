@@ -130,6 +130,7 @@ defined('ABSPATH') or die();
 					<option <?php echo ($option === 'mosaic_grid')? 'selected="selected"' : ''; ?> value="mosaic_grid">Mosaic Grid</option>
 					<option <?php echo ($option === 'chessboard_grid')? 'selected="selected"' : ''; ?> value="chessboard_grid">Chessboard Grid</option>
 					<option <?php echo ($option === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
+					<option <?php echo ($option === 'stripes')? 'selected="selected"' : ''; ?> value="stripes">Stripes</option>
 				</select>
 				<label for="videowallsz_default_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
 				<?php

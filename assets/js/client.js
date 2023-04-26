@@ -38,7 +38,8 @@
 //		* videowallszUIVideositePlaylistDetailsCreate()
 //		* videowallsUIVideositePlaylistGoTo()
 //		* videowallsUIVideositePlaylistCreatePlayer()
-//	7. Polyfill
+//  7. Stripes Design (endless)
+//	8. Polyfill
 //		* .matches
 //		* .closest
 
@@ -146,9 +147,12 @@
 
 				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
 
+				// We want to stop this from running here if it is non-endless wall, or if it is endless wall
+				// that does not activate the data load through scroll
 				if(current_wall.indexing.design === 'show_pages' ||
 				   current_wall.indexing.design === 'slide_wall' ||
-				   current_wall.indexing.design === 'videosite_playlist') {
+				   current_wall.indexing.design === 'videosite_playlist' ||
+				   current_wall.indexing.design === 'stripes') {
 					return false;
 				}
 
@@ -193,6 +197,26 @@
 					else {
 						videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data, false);
 					}
+				}
+			}
+		);
+
+		// Handler for the stripes videowall design
+		ZiggeoWP.hooks.set('videowallsz_wall_index_data_start', 'videowallsUIParseStripesVideos',
+			function(data) {
+				if(data.data.length === 0) {
+					return false;
+				}
+
+				var current_wall = ZiggeoWP.videowalls.walls[data.wall_id];
+
+				if(current_wall.indexing.design === 'stripes') {
+					//if(data.status === 'refreshing wall') {
+					//	videowallszUIVideoSitePlaylistCreate(data.wall_element, data.wall_id, data.data, true);
+					//}
+					//else {
+						videowallsUIStripesCreateUI(data.wall_element, data.wall_id, data.data);
+					//}
 				}
 			}
 		);
@@ -277,6 +301,7 @@
 			}, 1
 		);
 
+
 		/*
 		//The following are two examples how you can change the template of the video player when videos are not found
 		// as well as to change the message that is shown
@@ -342,10 +367,15 @@
 		}
 
 		var search_obj = {
-			limit: (search_params.limit) ? search_params.limit : 100,
+			limit: (search_params.limit) ? search_params.limit : Math.max(50, ZiggeoWP.videowalls.walls[id].indexing.perPage),
 			tags: (ZiggeoWP.videowalls.walls[id].tags) ? ZiggeoWP.videowalls.walls[id].tags : "",
 			skip: (search_params.skip) ? search_params.skip : 0,
-			approved: ZiggeoWP.videowalls.walls[id].indexing.status
+		}
+
+		// Only include the status if someone set it up
+		if(ZiggeoWP.videowalls.walls[id].indexing.status !== '' &&
+		   ZiggeoWP.videowalls.walls[id].indexing.status !== 'all') {
+			search_obj.approved = ZiggeoWP.videowalls.walls[id].indexing.status; 
 		}
 
 		//reference to wall
@@ -1970,7 +2000,127 @@
 
 
 /////////////////////////////////////////////////
-// 7. POLYFILL
+// 7. STRIPES DESIGN
+/////////////////////////////////////////////////
+
+	// Function used to initiate the process, by creating the main UI and making the call to get the videos
+	function videowallsUIStripesCreateUI(wall, id, wall_data) {
+		// We set the current video of this wall to the very start
+		ZiggeoWP.videowalls.walls[id].videos.current = 0;
+		// Helper to tell us if the wall was already created
+		var _exists = false;
+		var i, c;
+
+		wall.className += ' stripes_videowall';
+
+		function createStripe(player_id, video_data) {
+			var placeholder = document.createElement('div');
+			placeholder.className = 'stripe-player';
+
+			var title_p = document.createElement('div');
+			title_p.className = 'video_title';
+			title_p.innerText = video_data.title;
+
+			var description_p = document.createElement('div');
+			description_p.className = 'video_description';
+			description_p.innerText = video_data.description;
+
+			var player_p = document.createElement('div');
+			player_p.className = 'ziggeoplayer';
+			player_p.id = 'stripes_player_' + player_id;
+
+			placeholder.appendChild(title_p);
+			placeholder.appendChild(player_p);
+			placeholder.appendChild(description_p);
+
+			var _attrs = {
+				width: '100%',
+				theme: 'modern',
+				themecolor: 'red',
+				video: wall_data[i].token
+			};
+
+			var player = new ZiggeoApi.V2.Player({
+				element: player_p,
+				attrs: _attrs
+			});
+
+			player.activate();
+
+			return placeholder;
+		}
+
+		// Create forward arrow (towards start <<)
+		var arrow_before = document.createElement('div');
+		arrow_before.className = 'stripes_videowall_arrow_previous inactive';
+		arrow_before.addEventListener('click', function(e) {
+			videowallsUIStripesScrollStep(e.target, -1, 1);
+		});
+		//wall.parentElement.insertBefore(arrow_before, wall);
+		wall.appendChild(arrow_before);
+
+		// create the element that hosts the players
+		var players = document.createElement('div');
+		players.className = 'stripes_players_list';
+		wall.appendChild(players);
+
+		for(i = 0, c = wall_data.length; i < c; i++) {
+			players.appendChild( createStripe(i, wall_data[i]) );
+		}
+
+		players.addEventListener('scrollend', function(e) {
+			var list = e.target;
+			var prev = list.previousElementSibling;
+			var next = list.nextElementSibling;
+
+			// Checking if we are on the far left
+			if(list.scrollLeft === 0) {
+				prev.className += ' inactive';
+			}
+			else {
+				prev.className = prev.className.replace(' inactive', '');
+			}
+
+			// or if we are on the far right
+			if(list.scrollWidth === (list.scrollLeft + list.getBoundingClientRect().width)) {
+				next.className += ' inactive';
+			}
+			else {
+				next.className = next.className.replace(' inactive', '');
+			}
+		});
+
+		// Create next arrow (towards end >>)
+		var arrow_after = document.createElement('div');
+		arrow_after.className = 'stripes_videowall_arrow_next';
+		arrow_after.addEventListener('click', function(e) {
+			videowallsUIStripesScrollStep(e.target, 1, 1);
+		});
+		//wall.parentElement.insertBefore(arrow_after, wall.nextElementSibling);
+		wall.appendChild(arrow_after);
+
+		// Delay is present to make sure it is not re-set to block
+		setTimeout(function() {
+			wall.style.display = 'flex';
+		}, 200);
+	}
+
+	// Expects the arrow element to be passed over as HTML element
+	// then the direction should be positive 1 or negative -1 and
+	// steps should indicate how many videos we would scroll
+	function videowallsUIStripesScrollStep(elm_arrow, direction, steps) {
+		var i, c;
+
+		var list = elm_arrow.parentElement.getElementsByClassName('stripes_players_list')[0];
+		list.scrollBy(200 * direction * steps, 0);
+	}
+
+	// Maybe to add for player that plays to center it automatically
+	//.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" })
+
+
+/////////////////////////////////////////////////
+// 8. POLYFILL
 /////////////////////////////////////////////////
 
 	//Polyfill for .closest()

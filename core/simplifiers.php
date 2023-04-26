@@ -16,7 +16,7 @@ function videowallsz_p_wall_defaults() {
 		'scalable_width'            => '',
 		'show'                      => false,
 		'show_delay'                => 2,
-		'show_videos'               => 'approved', //all, approved, rejected, pending
+		'show_videos'               => '', //all, approved, rejected, pending
 		'template_name'             => '',
 		'title'                     => '',
 		'videos_per_page'           => 2,
@@ -24,7 +24,7 @@ function videowallsz_p_wall_defaults() {
 		'video_height'              => '240',
 		'video_width'               => '320',
 		'video_stretch'             => 'none', //none, all, by_height, by_width
-		'wall_design'               => 'show_pages', //show_pages, slide_wall, chessboard_grid, mosaic_grid, videosite_playlist
+		'wall_design'               => 'show_pages', //show_pages, slide_wall, chessboard_grid, mosaic_grid, videosite_playlist, stripes
 	);
 
 	return $defaults;

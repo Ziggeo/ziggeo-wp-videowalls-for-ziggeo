@@ -101,6 +101,10 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 
 		if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 100; }
 	 }
+	 elseif($wall['wall_design'] === 'stripes' ) {
+
+		if($wall['videos_per_page'] !== '') { $wall['videos_per_page'] = 50; }
+	 }
 	 else {
 		//Something seems off, raise notification
 		//@TODO: Add notification
@@ -180,10 +184,13 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 	}
 
 	//added to allow the video wall to process videos of the current user without requiring the PHP code to run it
-	$wall_tags = str_ireplace( '%ZIGGEO_USER%', $c_user, $wall_tags );
+	$wall_tags = str_replace( '%ZIGGEO_USER%', $c_user, $wall_tags );
+
 	//tags based on current page
-	$wall_tags = str_ireplace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
+	$wall_tags = str_replace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
 	$wall_tags = apply_filters('ziggeo_template_parsing_tag_set', $wall_tags, current_filter());
+	// fix the escaped quotes that might be present
+	$wall_tags = str_replace(array("'", '\\'), '', $wall_tags);
 
 	$wall['autoplay'] = ($wall['autoplay'] === true) ? 'true' : 'false';
 	$showtemplate = ($wall['on_no_videos'] === 'showtemplate') ? 'true' : 'false';

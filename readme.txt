@@ -3,7 +3,7 @@ Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
 Tested up to: 6.2
-Stable tag: 1.12
+Stable tag: 1.13
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -132,7 +132,10 @@ There are several ways to power your WordPress with video recording and video pl
 4. Videowall Design: "ChessBoard Grid" Wall
 5. Videowall Design: "Videosite Playlist" Wall: (Desktop layout)
 6. Videowall Design: "Videosite Playlist" Wall: (Mobile layout)
-7. Core plugin Template editor integration - videowall templates setup
+7. Videowall Design: "Stripes" (Mobile layout)
+8. Videowall Design: "Stripes" (Small width)
+9. Videowall Design: "Stripes" (Larger width)
+10. Core plugin Template editor integration - videowall templates setup
 
 
 == FAQ ==
@@ -183,12 +186,12 @@ To show videos you need to have videos on that specific page. This is done to al
 
 You can also tag your videos in our dashboard with the ID of the page that you want them shown on and voila, refresh your browser and they should be there.
 
-== Upgrade notice ==
-
-= 1.12 =
-* Added: filter for core plugin pre-render support
-* Modified: The wording for the default wall design is set to make it more clear it is default design
-
 == Changelog ==
 
-Please check CHANGELOG.md found in the plugin files. This file will for now on contain all of the logs for past versions.
+= 1.13 =
+* Added: New `Stripes` Design is now added to videowall plugin, allowing you to easily add a familiar design to any of your pages.
+* Updated: The update script will now update the version with latest version on install
+* Fixed: The videowall parameters tag might have been saved with quotes, breaking the functionality. We now make a quick cleanup if this is happening.
+* Improved: Default limit for number of videos is 50 now instead of per-page wall setting, unless the per-page wall setting has a larger number than 50, in which case that is used instead.
+
+For older versions please check CHANGELOG.md found in the plugin files. This file contains all of the logs for past versions.

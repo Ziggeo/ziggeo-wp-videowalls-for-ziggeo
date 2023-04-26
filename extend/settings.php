@@ -104,7 +104,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		'wall_design' => array(
 			'type'                  => 'enum',
 			'description'           => _x('This property allows you to change the initial design of your video wall. Default is show_pages', 'videowalls-for-ziggeo'),
-			'options'                => array('show_pages', 'slide_wall', 'chessboard_grid', 'mosaic_grid', 'videosite_playlist'),
+			'options'                => array('show_pages', 'slide_wall', 'chessboard_grid', 'mosaic_grid', 'videosite_playlist', 'stripes'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,

@@ -17,6 +17,16 @@ function videowallsz_p_on_update($options = null) {
 	//Get options - we always want to do this using the standard WP way
 	$options = get_option('videowallsz');
 
+	if($options === false) {
+		// fresh install
+		$options = videowallsz_p_get_plugin_options();
+		$options['version'] = VIDEOWALLSZ_VERSION;
+
+		update_option('videowallsz', $options);
+
+		return true;
+	}
+
 	//Are we already up to date?
 	if(isset($options['version']) && ($options['version'] == VIDEOWALLSZ_VERSION)) {
 		//All good and up to date, lets just go out of this.
@@ -24,8 +34,12 @@ function videowallsz_p_on_update($options = null) {
 	}
 
 	//In case this is very old version, lets make it safe for check down the road
-	if(!isset($options['version'])) {
+	if(!isset($options['version']) && $options !== false) {
 		$options['version'] = 0;
+	}
+	else {
+		// another check to make sure we exist (should not come here)
+		return true;
 	}
 
 	////////////////////////
@@ -43,6 +57,11 @@ function videowallsz_p_on_update($options = null) {
 			if(is_array($templates)) {
 				//All is good, lets do it
 				foreach ($templates as $template_id => $code) {
+
+					//sometimes v2 template might be here
+					if(is_array($code)) {
+						continue;
+					} 
 
 					if(stripos($code, '[videowall ') > -1) {
 
@@ -62,9 +81,7 @@ function videowallsz_p_on_update($options = null) {
 
 							$templates[$template_id] = $code;
 						}
-
 					}
-
 				}
 			}
 

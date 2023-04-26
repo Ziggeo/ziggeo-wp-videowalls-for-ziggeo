@@ -1,5 +1,12 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.12.1 =
+* Fix: Fixed the update check script to make sure it does not fire on install
+
+= 1.12 =
+* Added: filter for core plugin pre-render support
+* Modified: The wording for the default wall design is set to make it more clear it is default design
+
 = 1.11 =
 * Improvement: videowallsz_content_parse_videowall now returns code by default (was echoing it)
 * Added: Support for the Core plugin Lazyload option

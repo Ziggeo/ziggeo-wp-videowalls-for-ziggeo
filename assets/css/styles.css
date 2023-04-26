@@ -434,3 +434,149 @@ INDEX:
 		left: 40px;
 		bottom: 4px;
 	}
+
+/*******************************************************************************/
+/* 6. VIDEO STRIPES CSS */
+/*******************************************************************************/
+
+	.ziggeo_videoWall.stripes_videowall {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		height: 420px;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		margin: 20px 10px;
+		scroll-behavior: smooth;
+		padding: 0;
+		z-index: 1;
+		position: relative;
+	}
+
+	.ziggeo_videoWall.stripes_videowall .stripes_players_list {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		scroll-behavior: smooth;
+		padding: 0;
+	}
+
+	.stripes_videowall .stripe-player {
+		max-width: 200px;
+		min-width: 200px;
+		height: 400px;
+		position: relative;
+		margin: 0 10px 10px;
+	}
+	.stripes_videowall .stripe-player .video_title {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background-image: linear-gradient(#333, transparent);
+		z-index: 2;
+		text-align: center;
+		color: white;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: 4px;
+	}
+	.stripes_videowall .stripe-player .video_title + div, .stripes_videowall .stripe-player .video_title + div > div {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		aspect-ratio: 1/2 !important;
+	}
+	.stripes_videowall .stripe-player .video_description {
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		background-image: linear-gradient(transparent, #333);
+		position: absolute;
+		z-index: 2;
+		color: white;
+		padding: 4px;
+		overflow: hidden;
+		overflow-y: auto;
+		max-height: 2em;
+		text-overflow: ellipsis;
+		transition: max-height 800ms ease-in-out;
+	}
+	.stripes_videowall .stripe-player:hover .video_description {
+		max-height: 200px;
+	}
+
+	.stripes_videowall .stripe-player video.ba-videoplayer-video {
+		object-fit: cover;
+	}
+
+	.stripes_videowall_arrow_previous.inactive, .stripes_videowall_arrow_next.inactive {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	.stripes_videowall_arrow_previous, .stripes_videowall_arrow_next {
+		display: block;
+		width: 40px;
+		height: 420px;
+		position: relative;
+		background: white;
+		z-index: 3;
+		box-shadow: 0 0 10px gray;
+		cursor: pointer;
+		display: block;
+		min-width: 40px;
+		height: 50%;
+		margin: auto 4px;
+	}
+	.stripes_videowall_arrow_previous {
+		border-radius: 50% 0 0 50%;
+	}
+	.stripes_videowall_arrow_next {
+		border-radius: 0 50% 50% 0;
+	}
+	.stripes_videowall_arrow_previous::before, .stripes_videowall_arrow_previous::after,
+	.stripes_videowall_arrow_next::before, .stripes_videowall_arrow_next::after {
+		content: "";
+		position: relative;
+		display: inline-block;
+		width: 10px;
+		height: 40px;
+	}
+	.stripes_videowall_arrow_previous::before, .stripes_videowall_arrow_next::before {
+		top: calc(50% - 40px);
+		left: calc(50% - 5px);
+		background: silver;
+	}
+	.stripes_videowall_arrow_previous::after, .stripes_videowall_arrow_next::after {
+		top: 50%;
+		left: calc(50% - 15px);
+		background-color: lightgray;
+	}
+	.stripes_videowall_arrow_previous::before {
+		border-radius: 100% 0 0 0;
+	}
+	.stripes_videowall_arrow_previous::after {
+		border-radius: 0 0 0 100%;
+	}
+	.stripes_videowall_arrow_next::before {
+		border-radius: 0 100% 0 0;
+	}
+	.stripes_videowall_arrow_next::after {
+		border-radius: 0 0 100% 0;
+	}
+	.stripes_videowall_arrow_previous:hover::after, .stripes_videowall_arrow_next:hover::after {
+		background-color: lightblue;
+	}
+	.stripes_videowall_arrow_previous:hover::before, .stripes_videowall_arrow_next:hover::before {
+		background-color: lightskyblue;
+	}
+	.stripes_videowall_arrow_previous:active::after, .stripes_videowall_arrow_next:active::after {
+		background-color: lightskyblue;
+	}
+	.stripes_videowall_arrow_previous:active::before, .stripes_videowall_arrow_next:active::before {
+		background-color: lightblue;
+	}
