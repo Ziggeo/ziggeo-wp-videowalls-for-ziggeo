@@ -25,6 +25,7 @@ add_filter('ziggeo_template_parser_type_ziggeovideowall', function($template) {
 function videowallsz_content_parse_videowall($template, $post_code = false) {
 
 	$current_user = ziggeo_p_get_current_user();
+
 	$c_user = ( $current_user->user_login == "" ) ? 'Guest' : $current_user->user_login;
 
 	// Let's check if this is template name or not

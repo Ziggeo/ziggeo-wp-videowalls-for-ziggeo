@@ -34,10 +34,16 @@ function videowallsz_p_wall_defaults() {
 function videowallsz_p_populate_template($template) {
 
 	$defaults = videowallsz_p_wall_defaults();
+	$plugin_settings = videowallsz_p_get_plugin_options();
 
 	foreach($defaults as $default => $value) {
 		if(!isset($template[$default])) {
-			$template[$default] = $value;
+			if($default === 'wall_design') {
+				$template[$default] = $plugin_settings['default_design'];
+			}
+			else {
+				$template[$default] = $value;
+			}
 		}
 	}
 

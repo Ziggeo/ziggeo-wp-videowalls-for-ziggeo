@@ -1,5 +1,13 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.13 =
+* Added: New `Stripes` Design is now added to videowall plugin, allowing you to easily add a familiar design to any of your pages.
+* Updated: The update script will now update the version with latest version on install
+* Fixed: The videowall parameters tag might have been saved with quotes, breaking the functionality. We now make a quick cleanup if this is happening.
+* Improved: Default limit for number of videos is 50 now instead of per-page wall setting, unless the per-page wall setting has a larger number than 50, in which case that is used instead.
+
+For older versions please check CHANGELOG.md found in the plugin files. This file contains all of the logs for past versions.
+
 = 1.12.1 =
 * Fix: Fixed the update check script to make sure it does not fire on install
 
