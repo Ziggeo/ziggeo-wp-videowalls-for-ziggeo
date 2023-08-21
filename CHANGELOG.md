@@ -1,5 +1,8 @@
 This file contains the change log info for the `Videowalls for Ziggeo` plugin.
 
+= 1.14 =
+* Fixed: The videowall default design is always added when the design is not set in template or within the code
+
 = 1.13 =
 * Added: New `Stripes` Design is now added to videowall plugin, allowing you to easily add a familiar design to any of your pages.
 * Updated: The update script will now update the version with latest version on install

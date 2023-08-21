@@ -296,6 +296,18 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 			'advanced'              => true,
 			'simple'                => true,
 			'default_value'         => 2
+		),
+		'pre_set_list' => array(
+			'type'                  => 'string',
+			'description'           => _x('Comma separated list of video tokens for when you want your wall to only show specific set of videos)', 'videowalls-for-ziggeo'),
+			'used_by_player'        => false,
+			'used_by_recorder'      => false,
+			'used_by_rerecorder'    => false,
+			'used_by_uploader'      => false,
+			'custom_used_by'        => 'ziggeovideowall',
+			'advanced'              => true,
+			'simple'                => true,
+			'default_value'         => ''
 		)
 	);
 

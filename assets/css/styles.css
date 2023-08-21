@@ -95,13 +95,13 @@ INDEX:
 /*******************************************************************************/
 /* 2. SLIDEWALL CSS */
 /*******************************************************************************/
-	.ziggeo-wall-slideWall .ziggeo_wallpage {
+	.ziggeo-wall-slideWall .ziggeo_wallpage,  .ziggeo_wallpage {
 		position: relative;
 	}
 	/* base properties for both previous and next arrows */
 	.ziggeo_videowall_slide_previous, .ziggeo_videowall_slide_next {
-		height: 80%;
-		margin-top: 5%;
+		/*height: 80%;
+		margin-top: 5%;*/
 		min-width: 40px;
 		position: absolute;
 		vertical-align: middle;
@@ -111,24 +111,40 @@ INDEX:
 		background-position: center center;
 		background-repeat: no-repeat;
 		z-index: 2;
+		top: 20px;
+		bottom: 20px;
+		/*height: auto;*/
 	}
 	/* to make previous stick before the video */
 	.ziggeo_videowall_slide_previous {
-		float: left;
+		left: 0;
 		border-top-left-radius: 100%;
 		border-bottom-left-radius: 100%;
 		border-left: 2px groove lightgray;
 	}
-	/* to make next arrow stick on the right of the videos */
+	/*.ziggeo_videowall_slide_previous {
+		float: left;
+		border-top-left-radius: 100%;
+		border-bottom-left-radius: 100%;
+		border-left: 2px groove lightgray;
+	}*/
 	.ziggeo_videowall_slide_next {
-		float: right;
 		right: 0;
-		top: 0;
-		/* To make them nice and rounded */
 		border-top-right-radius: 100%;
 		border-bottom-right-radius: 100%;
 		border-right: 2px groove lightgray;
 	}
+	/* to make next arrow stick on the right of the videos */
+	/*.ziggeo_videowall_slide_next {
+		float: right;
+		right: 0;
+		top: 0;
+		/* To make them nice and rounded */
+		/*
+		border-top-right-radius: 100%;
+		border-bottom-right-radius: 100%;
+		border-right: 2px groove lightgray;
+	}*/
 	/* the styles that are applied when mouse is over the slidewall previous button */
 	.ziggeo_videowall_slide_previous:hover {
 		box-shadow: -3px 0 4px lightgray;

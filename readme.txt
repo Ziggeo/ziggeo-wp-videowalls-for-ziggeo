@@ -2,8 +2,8 @@
 Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 6.2
-Stable tag: 1.14
+Tested up to: 6.3
+Stable tag: 1.15
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -188,5 +188,6 @@ You can also tag your videos in our dashboard with the ID of the page that you w
 
 == Changelog ==
 
-= 1.14 =
-* Fixed: The videowall default design is always added when the design is not set in template or within the code
+= 1.15 =
+* New Feature: The videowalls now also accept the list of video tokens to be played instead of using the API to find them. Useful if you have a list of tokens that you want to play within some page using some specific videowall design. This is possible to do with `show_pages`, `slide_wall`, `videosite_playlist` and `stripes` (not with `chessboard_grid`, `mosaic_grid`).
+* Fixed: Cleaned up some scripts and removed limitation that could have resulted in not all columns of Mosaic Grid being filled out.

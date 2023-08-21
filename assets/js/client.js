@@ -349,6 +349,51 @@
 // 2. GENERAL FUNCTIONALITY
 /////////////////////////////////////////////////
 
+	function videowallszAPISuccess(data, wall_id, wall_reference, search_params, is_csv) {
+
+		if(is_csv === true) {
+			data = data.split(',');
+		}
+		else {
+			//We first check if we have any videos matching the requirements of the wall
+			if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'approved') {
+				data = videowallszFilterApproved(data);
+			}
+			else if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'rejected') {
+				data = videowallszFilterRejected(data);
+			}
+			else if(ZiggeoWP.videowalls.walls[wall_id].indexing.status === 'pending') {
+				data = videowallszFilterPending(data);
+			}
+			//Else it is all and we do not need to filter anything (status: "all")
+		}
+
+		//Now raising the notification about the video data being ready
+		ZiggeoWP.hooks.fire('videowallsz_wall_index_data_start', {
+			wall_id: wall_id,
+			wall_element: wall_reference,
+			search_parameters: search_params,
+			data: data,
+			status: 'about_to_process_data'
+		});
+
+		//The videowall is no longer fresh, so all initial actions should no longer be caried out..
+		ZiggeoWP.videowalls.walls[wall_id].indexing.fresh = false;
+
+		//We are currently not processing any videos (in video wall context)
+		ZiggeoWP.videowalls.walls[wall_id].processing = false;
+
+		wall_reference.style.display = 'block';
+
+		ZiggeoWP.hooks.fire('videowallsz_wall_index_data_finished', {
+			wall_id: wall_id,
+			wall_element: wall_reference,
+			search_parameters: search_params,
+			data: data,
+			status: 'videowall_is_processed'
+		});
+	}
+
 	//in case there are multiple walls on the same page, we want to be sure not to cause issues.
 	// This should catch it and not declare the function again.
 	//show video wall based on its ID
@@ -416,6 +461,14 @@
 			return false;
 		}
 
+		// Let's check if this is the pre-defined list of videos or if we should use our API
+		if(ZiggeoWP.videowalls.walls[id].indexing.pre_set_list.trim().length > 0) {
+			// We should have a comma separated list here
+
+			videowallszAPISuccess(ZiggeoWP.videowalls.walls[id].indexing.pre_set_list, id, wall, search_params, true);
+			return true;
+		}
+
 		if(ZiggeoWP.videowalls.walls[id].indexing.fresh === true) {
 			//a fresh wall
 			ZiggeoWP.hooks.fire('videowallsz_fresh_wall', {
@@ -431,43 +484,7 @@
 		var _index = ziggeo_app.videos.index( search_obj );
 
 		_index.success( function (data) {
-
-			//We first check if we have any videos matching the requirements of the wall
-			if(ZiggeoWP.videowalls.walls[id].indexing.status === 'approved') {
-				data = videowallszFilterApproved(data);
-			}
-			else if(ZiggeoWP.videowalls.walls[id].indexing.status === 'rejected') {
-				data = videowallszFilterRejected(data);
-			}
-			else if(ZiggeoWP.videowalls.walls[id].indexing.status === 'pending') {
-				data = videowallszFilterPending(data);
-			}
-			//Else it is all and we do not need to filter anything (status: "all")
-
-			//Now raising the notification about the video data being ready
-			ZiggeoWP.hooks.fire('videowallsz_wall_index_data_start', {
-				wall_id: id,
-				wall_element: wall,
-				search_parameters: search_params,
-				data: data,
-				status: 'about_to_process_data'
-			});
-
-			//The videowall is no longer fresh, so all initial actions should no longer be caried out..
-			ZiggeoWP.videowalls.walls[id].indexing.fresh = false;
-
-			//We are currently not processing any videos (in video wall context)
-			ZiggeoWP.videowalls.walls[id].processing = false;
-
-			wall.style.display = 'block';
-
-			ZiggeoWP.hooks.fire('videowallsz_wall_index_data_finished', {
-				wall_id: id,
-				wall_element: wall,
-				search_parameters: search_params,
-				data: data,
-				status: 'videowall_is_processed'
-			});
+			videowallszAPISuccess(data, id, wall, search_params);
 		});
 
 		_index.error(function (args, error) {
@@ -690,7 +707,6 @@
 
 			ZiggeoWP.videowalls.walls[current_wall_ref.id].current_player = embedding;
 		});
-
 	}
 
 	function videowallszCreateWall(id, wall_object, counter) {
@@ -765,11 +781,16 @@
 			time += 10000;
 		}
 
+		// If the list is manually provided, we do not do any API calls
+		if(ZiggeoWP.videowalls.walls[wall_id].indexing.pre_set_list.trim.length > 0) {
+			return false;
+		}
+
 		//Sure we could use setInterval, however setTimeout is used because we want to make a new request only
 		// after we get the response from the previous one. It makes no sense for us to send one each second
 		// and we for example did not yet get a response.
 		setTimeout(function() {
-			var wall = ZiggeoWP.videowalls[wall_id];
+			var wall = ZiggeoWP.videowalls.walls[wall_id];
 
 			var search_obj = {
 				limit: 1,
@@ -997,6 +1018,12 @@
 		ZiggeoWP.videowalls.endless = id;
 
 		var i, j, c;
+		var is_csv = (typeof wall_data[0] !== 'undefined' && typeof wall_data[0].token !== undefined) ? false: true;
+
+		if(is_csv === true) {
+			ziggeoDevReport('Custom tokens are not currently supported in ChessBoard Grid video wall');
+			return false;
+		}
 
 		// Let us show loading indicator as we load the videos
 		var tmp = document.getElementById('ziggeo-endless-loading_more');
@@ -1124,6 +1151,10 @@
 				additional: ''
 			};
 
+			if(typeof wall_data[i].token === 'undefined') {
+
+			}
+
 			codes.player = player_code + ' ziggeo-video="' + wall_data[i].token + '"';
 
 			if(i === random_autoplay_piece && ZiggeoWP.videowalls.walls[id].videos.autoplay === true) {
@@ -1162,8 +1193,6 @@
 		}
 
 		// Add chess pieces - black pieces go second (positioned at the bottom)
-
-		// Add chess pieces - white goes first
 		for(i = 16, c = 32; i < c; i++) {
 
 			if(i === 0 && wall_data.length < 16) {
@@ -1346,6 +1375,13 @@
 		var used_videos = 0;
 		var j = wall_data.length;
 
+		var is_csv = (typeof wall_data[0] !== 'undefined' && typeof wall_data[0].token !== undefined) ? false: true;
+
+		if(is_csv === true) {
+			ziggeoDevReport('Custom tokens are not currently supported in Mosaic Grid video wall');
+			return false;
+		}
+
 		if(ZiggeoWP.videowalls.walls[id]['loaded_data'] && _new === true) {
 			j -= ZiggeoWP.videowalls.walls[id]['loaded_data'].length;
 		}
@@ -1379,11 +1415,6 @@
 		var _mosaic_rows = wall.querySelectorAll('.mosaic_col');
 
 		for(i = 0, tmp=''; i < j; i++, tmp='', _mosaic_row_count++) {
-
-			//break once we load enough of videos
-			if(i >= ZiggeoWP.videowalls.walls[id].indexing.perPage) {
-				break;
-			}
 
 			var codes = {
 				player: '',
@@ -1442,31 +1473,16 @@
 			//finalize the embedding
 			var tmp_embedding = '<ziggeoplayer ' + codes.player  + codes.additional + '></ziggeoplayer>';
 
-			if(ZiggeoWP.videowalls.walls[id].indexing.design === 'mosaic_grid') {
-				//@ADD - sort option as bellow, this is just a quick test
-
-				if(_new === false) {
-					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('afterbegin', tmp_embedding);
-				}
-				else {
-					_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
-				}
-				//wall.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
-				used_videos++;
-				wall_data[i] = null;//so that it is not used by other ifs..
+			//@ADD - sort option as bellow, this is just a quick test
+			if(_new === false) {
+				_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('afterbegin', tmp_embedding);
 			}
 			else {
-				//We could add the check if the video should be added at the front or at the back..
-				// at this time we will just add it at the front.
-				if(_new == false) {
-					wall.insertAdjacentHTML('afterbegin', tmp_embedding);
-				}
-				else {
-					wall.insertAdjacentHTML('beforeend', tmp_embedding);
-				}
-				used_videos++;
-				wall_data[i] = null;//so that it is not used by other ifs..
+				_mosaic_rows[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
 			}
+			//wall.children[_mosaic_row_count].insertAdjacentHTML('beforeend', tmp_embedding);
+			used_videos++;
+			wall_data[i] = null;//so that it is not used by other ifs..
 		}
 
 		var tmp = document.getElementById('ziggeo-endless-loading_more');
@@ -1533,9 +1549,11 @@
 
 		for(i = 0, j = wall_data.length, tmp=''; i < j; i++, tmp='') {
 
+			var _token = (typeof wall_data[i].token === 'undefined') ? wall_data[i] : wall_data[i].token;
+
 			codes.player = ' ziggeo-width=' + ZiggeoWP.videowalls.walls[id].videos.width +
 							' ziggeo-height=' + ZiggeoWP.videowalls.walls[id].videos.height +
-							' ziggeo-video="' + wall_data[i].token + '"' +
+							' ziggeo-video="' + _token + '"' +
 							( (used_videos === 0 && ZiggeoWP.videowalls.walls[id].videos.autoplay) ? ' ziggeo-autoplay ' : '' );
 
 			//in case we need to add the class to it
@@ -1559,7 +1577,7 @@
 			}
 
 			//Set the orientation
-			if(wall_data[i].wordpress) {
+			if(typeof wall_data[i].wordpress !== 'undefined') {
 				codes.additional = ' data-orientation="' + wall_data[i].wordpress.orientation + '"';
 			}
 
@@ -1722,12 +1740,21 @@
 		//The ID for the video 
 		ZiggeoWP.videowalls.walls[id].videos.current = 0;
 		var _exists = false;
+		var is_csv = false;
 
 		var _list = [];
 
 		for(i = 0, j = wall_data.length; i < j; i++) {
 			//Create a list for main player
-			_list.push(wall_data[i].token);
+
+			// Support for the pre_set_list
+			if(typeof wall_data[i].token === 'undefined') {
+				_list.push(wall_data[i]);
+				is_csv = true;
+			}
+			else {
+				_list.push(wall_data[i].token);
+			}
 		}
 
 		if(document.getElementById('videosite_playlist_m_' + id)) {
@@ -1752,23 +1779,36 @@
 
 		_main.appendChild(_playlist);
 
-		_main.appendChild(videowallszUIVideositePlaylistDetailsCreate({
-			title: wall_data[0].title,
-			description: wall_data[0].description,
-			created: videowallszGetDateFromUnix(wall_data[0].created),
-			__complete: wall_data[0]
-		}));
+		if(is_csv === true) {
+			var get_request = ziggeo_app.videos.get(wall_data[0]);
+
+			get_request.success(function (data) {
+
+				wall_data[0] = data;
+
+				_main.appendChild(videowallszUIVideositePlaylistDetailsCreate({
+					title: wall_data[0].title,
+					description: wall_data[0].description,
+					created: videowallszGetDateFromUnix(wall_data[0].created),
+					__complete: wall_data[0]
+				}));
+			});
+		}
+		else {
+			_main.appendChild(videowallszUIVideositePlaylistDetailsCreate({
+				title: wall_data[0].title,
+				description: wall_data[0].description,
+				created: videowallszGetDateFromUnix(wall_data[0].created),
+				__complete: wall_data[0]
+			}));
+		}
 
 		wall.appendChild(_main);
 
 		videowallsUIVideositePlaylistCreatePlayer(id, _playlist, _list, false);
 
 		//Create side
-		var _side = videowallszUIVideositePlaylistSidePopulate(id, wall_data);
-
-		if(_side !== null) {
-			wall.appendChild(_side);
-		}
+		videowallszUIVideositePlaylistSidePopulate(id, wall_data, wall, is_csv);
 
 		//lets show it:
 		wall.style.display = 'block';
@@ -1788,7 +1828,7 @@
 		}
 	}
 
-	function videowallszUIVideositePlaylistSidePopulate(wall_id, wall_data) {
+	function videowallszUIVideositePlaylistSidePopulate(wall_id, wall_data, wall_ref, is_csv) {
 
 		var _new = false;
 
@@ -1805,26 +1845,42 @@
 		}
 
 		for(i = 0, j = wall_data.length; i < j; i++) {
-			var _list_div = document.createElement('div');
-			_list_div.id = "videosite_playlist-v-" + i;
+			if(is_csv === true) {
+				var get_request = ziggeo_app.videos.get(wall_data[i]);
 
-			if(i === 0) {
+				get_request.success(function (data) {
+
+					wall_data[i] = data;
+
+					createSideEntry(i, wall_data[i]);
+				});
+			}
+			else {
+				createSideEntry(i, wall_data[i]);
+			}
+		}
+
+		function createSideEntry(current_index, data) {
+			var _list_div = document.createElement('div');
+			_list_div.id = "videosite_playlist-v-" + current_index;
+
+			if(current_index === 0) {
 				_list_div.className = 'current';
 			}
 
 			var _img_div = document.createElement('div');
 			_img_div.className = 'img';
 			var _img = document.createElement('img');
-			_img.src = 'https://' + wall_data[i]['embed_image_url'];
+			_img.src = 'https://' + data['embed_image_url'];
 			_img_div.appendChild(_img);
 
 			var _title = document.createElement('div');
-			_title.innerHTML = wall_data[i]['title'];
+			_title.innerHTML = data['title'];
 			_title.className = 'video_title';
 
 			var _time = document.createElement('div');
 			//TODO: we could add here a check to see if it is over minute, etc.
-			_time.innerHTML = wall_data[i]['duration'] + 's';
+			_time.innerHTML = data['duration'] + 's';
 			_time.className = 'video_duration';
 
 			//We can add here title, image and time
@@ -1839,6 +1895,7 @@
 
 			_list_div.addEventListener('click', function(evnt) {
 				//Play from this video
+				var i, j;
 
 				var _go_to = evnt.currentTarget.id.replace('videosite_playlist-v-', '');
 
@@ -1856,7 +1913,9 @@
 			});
 		}
 
-		return _side;
+		wall_ref.appendChild(_side);
+
+		//return _side;
 	}
 
 	//function to create and update the details if same ID already exists
@@ -2010,6 +2069,11 @@
 		// Helper to tell us if the wall was already created
 		var _exists = false;
 		var i, c;
+		var is_csv = true;
+
+		if(typeof wall_data[0] !== 'undefined' && typeof wall_data[0].token !== 'undefined') {
+			is_csv = false;
+		}
 
 		wall.className += ' stripes_videowall';
 
@@ -2065,7 +2129,19 @@
 		wall.appendChild(players);
 
 		for(i = 0, c = wall_data.length; i < c; i++) {
-			players.appendChild( createStripe(i, wall_data[i]) );
+			if(is_csv === true) {
+				var get_request = ziggeo_app.videos.get(wall_data[i]);
+
+				get_request.success(function (data) {
+
+					wall_data[i] = data;
+
+					players.appendChild( createStripe(i, wall_data[i]) );
+				});
+			}
+			else {
+				players.appendChild( createStripe(i, wall_data[i]) );
+			}
 		}
 
 		players.addEventListener('scrollend', function(e) {
