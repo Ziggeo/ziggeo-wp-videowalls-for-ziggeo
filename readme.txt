@@ -1,8 +1,8 @@
 === VideoWalls for Ziggeo ===
-Contributors: oliverfriedmann, baned, carloscsz409, natashacalleia
+Contributors: oliverfriedmann, baned
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 3.0.1
-Tested up to: 6.3
+Tested up to: 6.7.2
 Stable tag: 1.15
 Requires PHP: 5.2.4
 License: GPLv2 or later
