@@ -31,10 +31,10 @@ defined('ABSPATH') or die();
 	add_action('admin_init', function() {
 		//Register settings
 		register_setting('videowallsz', 'videowallsz', array(
-															'sanitize_callback' => 'videowallsz_validate',
-															'default'			=> array(
-																'enable_editor'		=> '1',
-																'default_design'		=> 'slide_wall'
+															'sanitize_callback'  => 'videowallsz_validate',
+															'default'            => array(
+																'enable_editor'  => '1',
+																'default_design' => 'slide_wall'
 															)
 		));
 
@@ -44,14 +44,14 @@ defined('ABSPATH') or die();
 
 			// 
 			add_settings_field('videowallsz_enable_editor',
-								__('Enable Editor', 'videowallsz'),
+								__('Enable Editor', 'videowalls-for-ziggeo'),
 								'videowallsz_o_enable_editor',
 								'videowallsz',
 								'videowallsz_o_section');
 
 			// 
 			add_settings_field('videowallsz_default_design',
-								__('Default design', 'videowallsz'),
+								__('Default design', 'videowalls-for-ziggeo'),
 								'videowallsz_o_default_design',
 								'videowallsz',
 								'videowallsz_o_section');
@@ -72,7 +72,14 @@ defined('ABSPATH') or die();
 			add_action( 'admin_notices', function() {
 				?>
 				<div class="error notice">
-					<p><?php _e( 'Please install <a href="https://wordpress.org/plugins/ziggeo/">Ziggeo plugin</a>. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowallsz' ); ?></p>
+					<p><?php printf(
+						/* translators: %s: Hardcoded opened link element, %s: Hardcoded closing link element
+							"Ziggeo plugin" is the link keyword
+						*/
+						esc_html( 'Please install %1$sZiggeo plugin%2$s. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowalls-for-ziggeo' ),
+						'<a href="https://wordpress.org/plugins/ziggeo/">',
+						'</a>'
+					); ?></p>
 				</div>
 				<?php
 			});
@@ -108,7 +115,7 @@ defined('ABSPATH') or die();
 	}
 
 		function videowallsz_o_section() {
-			_e('VideoWall plugin hooks into Ziggeo core plugin and makes changes to it per these settings', 'videowallsz');
+			esc_html_e('VideoWall plugin hooks into Ziggeo core plugin and makes changes to it per these settings', 'videowalls-for-ziggeo');
 		}
 
 			function videowallsz_o_enable_editor() {
@@ -116,7 +123,7 @@ defined('ABSPATH') or die();
 
 				?>
 				<input id="videowallsz_enable_editor" name="videowallsz[enable_editor]" size="50" type="checkbox" value="1" <?php echo checked( 1, $option, false ); ?>/>
-				<label for="videowallsz_enable_editor"><?php _e('When checked videowalls will be added to the templates editor', 'videowallsz'); ?></label>
+				<label for="videowallsz_enable_editor"><?php esc_html_e('When checked videowalls will be added to the templates editor', 'videowalls-for-ziggeo'); ?></label>
 				<?php
 			}
 
@@ -132,7 +139,7 @@ defined('ABSPATH') or die();
 					<option <?php echo ($option === 'videosite_playlist')? 'selected="selected"' : ''; ?> value="videosite_playlist">VideoSite Playlist</option>
 					<option <?php echo ($option === 'stripes')? 'selected="selected"' : ''; ?> value="stripes">Stripes</option>
 				</select>
-				<label for="videowallsz_default_design"><?php _e('What design should be used by default?', 'videowallsz'); ?></label>
+				<label for="videowallsz_default_design"><?php esc_html_e('What design should be used by default?', 'videowalls-for-ziggeo'); ?></label>
 				<?php
 			}
 

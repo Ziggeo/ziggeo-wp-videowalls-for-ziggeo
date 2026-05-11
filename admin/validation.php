@@ -1,4 +1,7 @@
 <?php
+//Checking if WP is running or if this is a direct call..
+defined('ABSPATH') or die();
+
 
 function videowallsz_validate($input) {
 

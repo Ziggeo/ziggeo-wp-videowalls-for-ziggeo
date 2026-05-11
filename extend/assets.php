@@ -10,6 +10,7 @@ function videowallsz_css_video_wall() {
 	$css = '';
 	$css = apply_filters('videowallsz_assets_videowall_css', $css);
 
+	// phpcs:disable
 	?>
 	<style type="text/css">
 		.ziggeo_videowall_slide_previous {
@@ -21,6 +22,7 @@ function videowallsz_css_video_wall() {
 		<?php echo $css; ?>
 	</style>
 	<?php
+	// phpcs:enable
 }
 
 

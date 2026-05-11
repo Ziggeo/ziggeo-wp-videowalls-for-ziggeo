@@ -13,7 +13,7 @@ add_filter('ziggeo_setting_available_templates', function($templates) {
 	//lets add videowall template..
 	$templates[] = array(
 						'value' => '[ziggeovideowall',
-						'string' => _x('Ziggeo VideoWall', 'videowalls-for-ziggeo')
+						'string' => __('Ziggeo VideoWall', 'videowalls-for-ziggeo')
 	);
 
 	return $templates;
@@ -43,7 +43,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 	$wall_parameters = array(
 		'fixed_width' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer value representing fixed width of the video wall', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer value representing fixed width of the video wall', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -55,7 +55,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'fixed_height' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer value representing fixed height of the video wall', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer value representing fixed height of the video wall', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -67,7 +67,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'scalable_width' => array(
 			'type'                  => 'float',
-			'description'           => _x('Float value representing width of the video wall in percentages of the available space', 'videowalls-for-ziggeo'),
+			'description'           => __('Float value representing width of the video wall in percentages of the available space', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -79,7 +79,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'scalable_height' => array(
 			'type'                  => 'float',
-			'description'           => _x('Float value representing height of the video wall in percentages of the available space', 'videowalls-for-ziggeo'),
+			'description'           => __('Float value representing height of the video wall in percentages of the available space', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -91,7 +91,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'title' => array(
 			'type'                  => 'string',
-			'description'           => _x('String value representing title of the video wall - always shown on top', 'videowalls-for-ziggeo'),
+			'description'           => __('String value representing title of the video wall - always shown on top', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -103,7 +103,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'wall_design' => array(
 			'type'                  => 'enum',
-			'description'           => _x('This property allows you to change the initial design of your video wall. Default is show_pages', 'videowalls-for-ziggeo'),
+			'description'           => __('This property allows you to change the initial design of your video wall. Default is show_pages', 'videowalls-for-ziggeo'),
 			'options'                => array('show_pages', 'slide_wall', 'chessboard_grid', 'mosaic_grid', 'videosite_playlist', 'stripes'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
@@ -116,7 +116,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'videos_per_page' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer value determining how many videos should be shown per page (defaults: 1 with slide_wall and 2 with show_pages)', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer value determining how many videos should be shown per page (defaults: 1 with slide_wall and 2 with show_pages)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -128,7 +128,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'video_stretch' => array(
 			'type'                  => 'enum',
-			'description'           => _x('Choose if you want any type of stretching being applied on the video players within the video wall.', 'videowalls-for-ziggeo'),
+			'description'           => __('Choose if you want any type of stretching being applied on the video players within the video wall.', 'videowalls-for-ziggeo'),
 			'options'                => array('none', 'all', 'by_height', 'by_width'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
@@ -141,7 +141,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'videos_to_show' => array(
 			'type'                  => 'array',
-			'description'           => _x('Array to setup which videos should be shown. Default video wall shows videos made on post it is on. This accepts comma separated values of post IDs (format: `post_ID`) or any other tags. Adding just &apos;&apos; (two single quotes) will show all videos in your account (videos_to_show=&apos;&apos;)', 'videowalls-for-ziggeo'),
+			'description'           => __('Array to setup which videos should be shown. Default video wall shows videos made on post it is on. This accepts comma separated values of post IDs (format: `post_ID`) or any other tags. Adding just &apos;&apos; (two single quotes) will show all videos in your account (videos_to_show=&apos;&apos;)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -153,7 +153,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'video_width' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer value representing the width of each video in the wall', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer value representing the width of each video in the wall', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -165,7 +165,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'video_height' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer value representing the height of each video in the wall', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer value representing the height of each video in the wall', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -177,7 +177,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'on_no_videos' => array(
 			'type'                  => 'enum',
-			'description'           => _x('Array value representing what should happen if there are no videos.', 'videowalls-for-ziggeo'),
+			'description'           => __('Array value representing what should happen if there are no videos.', 'videowalls-for-ziggeo'),
 			'options'                => array('showmessage', 'showtemplate', 'hidewall'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
@@ -190,7 +190,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'message' => array(
 			'type'                  => 'string',
-			'description'           => _x('String value that will be shown if `on_no_videos` is set to `showmessage`', 'videowalls-for-ziggeo'),
+			'description'           => __('String value that will be shown if `on_no_videos` is set to `showmessage`', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -202,7 +202,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'template_name' => array(
 			'type'                  => 'string',
-			'description'           => _x('String value holding the name of the video template that you want to show if the `on_no_videos` is set to `showtemplate` (if it does not exist default is loaded)', 'videowalls-for-ziggeo'),
+			'description'           => __('String value holding the name of the video template that you want to show if the `on_no_videos` is set to `showtemplate` (if it does not exist default is loaded)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -214,7 +214,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'show_videos' => array(
 			'type'                  => 'enum',
-			'description'           => _x('Array value stating which videos will be shown.', 'videowalls-for-ziggeo'),
+			'description'           => __('Array value stating which videos will be shown.', 'videowalls-for-ziggeo'),
 			'options'                => array('all', 'approved', 'rejected', 'pending'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
@@ -227,7 +227,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'autoplay' => array(
 			'type'                  => 'bool',
-			'description'           => _x('Boolean value indicating if first video should be played automatically.', 'videowalls-for-ziggeo'),
+			'description'           => __('Boolean value indicating if first video should be played automatically.', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -239,7 +239,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'autoplay-continue-end' => array(
 			'type'                  => 'bool',
-			'description'           => _x('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page (requires `autoplay`)', 'videowalls-for-ziggeo'),
+			'description'           => __('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page (requires `autoplay`)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -251,7 +251,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'autoplay-continue-run' => array(
 			'type'                  => 'bool',
-			'description'           => _x('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page is met, then start again (looping through all videos on the page one by one) - (requires `autoplay`)', 'videowalls-for-ziggeo'),
+			'description'           => __('Boolean value indicating that you want the autoplay of second video to start when playback of first one ends and to continue until the end of the (first) page is met, then start again (looping through all videos on the page one by one) - (requires `autoplay`)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -263,7 +263,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'auto_refresh' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Integer representing the number of seconds to wait before checking if there is any new video available. Zero turns it off', 'videowalls-for-ziggeo'),
+			'description'           => __('Integer representing the number of seconds to wait before checking if there is any new video available. Zero turns it off', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -275,7 +275,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'show' => array(
 			'type'                  => 'bool',
-			'description'           => _x('Boolean value indicating if video wall is shown even if the video is not submitted (defaults to waiting for submission of a video to show the video wall, adding this shows it right away)', 'videowalls-for-ziggeo'),
+			'description'           => __('Boolean value indicating if video wall is shown even if the video is not submitted (defaults to waiting for submission of a video to show the video wall, adding this shows it right away)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -287,7 +287,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'show_delay' => array(
 			'type'                  => 'integer',
-			'description'           => _x('Number of seconds to pass for videowall to be shown. Defaults to 2seconds as lower numbers might not work in different parts of Wordpress.)', 'videowalls-for-ziggeo'),
+			'description'           => __('Number of seconds to pass for videowall to be shown. Defaults to 2seconds as lower numbers might not work in different parts of Wordpress.)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -299,7 +299,7 @@ add_filter('ziggeo_template_parameters_list', function($parameters_list) {
 		),
 		'pre_set_list' => array(
 			'type'                  => 'string',
-			'description'           => _x('Comma separated list of video tokens for when you want your wall to only show specific set of videos)', 'videowalls-for-ziggeo'),
+			'description'           => __('Comma separated list of video tokens for when you want your wall to only show specific set of videos)', 'videowalls-for-ziggeo'),
 			'used_by_player'        => false,
 			'used_by_recorder'      => false,
 			'used_by_rerecorder'    => false,
@@ -321,11 +321,11 @@ add_action('ziggeo_settings_before_editor', function($templates) {
 	?>
 	<p id="ziggeo_videowall_info" style="display:none;">
 		<span class="ziggeo_info"><?php
-			_ex('Video Wall template (by default) shows videos made on the post the videwall template is on. If you wish to change it to show other videos, just add', 'videowall info 1/3', 'videowalls-for-ziggeo');
+			echo esc_html_x('Video Wall template (by default) shows videos made on the post the videwall template is on. If you wish to change it to show other videos, just add', 'videowall info 1/3', 'videowalls-for-ziggeo');
 			?> <b onclick="ziggeoPUIParametersQuickAdd({ currentTarget:this});" data-equal="=''"><?php
-				_ex('videos_to_show', 'videowall info 2/3', 'videowalls-for-ziggeo');
+				echo esc_html_x('videos_to_show', 'videowall info 2/3', 'videowalls-for-ziggeo');
 			?></b> <?php
-			_ex('and modify it to your needs', 'videowall info 3/3', 'videowalls-for-ziggeo'); ?></span>
+			echo esc_html_x('and modify it to your needs', 'videowall info 3/3', 'videowalls-for-ziggeo'); ?></span>
 		<span>For more info about Videowall parameters please <a href="https://ziggeo.com/docs/integrations/wordpress/videowalls/">head over to our docs</a></span>
 	</p>
 	<?php

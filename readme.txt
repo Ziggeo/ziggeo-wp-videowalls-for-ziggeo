@@ -2,15 +2,13 @@
 Contributors: oliverfriedmann, baned
 Tags: video, ziggeo, videowall, playlist, video gallery
 Requires at least: 6.9
-Tested up to: 6.9.4
-Stable tag: 1.15
+Tested up to: 6.9
+Stable tag: 1.15.1
 Requires PHP: 8.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin utilizes the power of Ziggeo to make it easy to share galleries and walls of videos on your website quickly and easily.
-
-Please note that you need to install and setup [Ziggeo plugin](https://wordpress.org/plugins/ziggeo/) first. This plugin is offered as an extension of the same.
 
 == Who is this plugin for? ==
 
@@ -27,6 +25,12 @@ If on any questions above the answer is yes, then this plugin is for you!
 Video is future. Gigants know this and have been saying more and more recently. Ads are better when they are videos. You can tell more with video than with image. Showing yourself, or what you do is more interesting with a video. Video, video, video. And this pugin is just that, a whole lot of videos.
 
 You can choose the design that you want to showcase your videos as. Instead of creating a lot of code, all you would do is to just install and style the walls of videos to meet your imagination. Let it run wild and be part of video revolution today!
+
+= Requirements =
+
+Please note that you need to install and setup [Ziggeo plugin](https://wordpress.org/plugins/ziggeo/) first. This plugin is offered as an extension of the same.
+
+You will also need Ziggeo account in any region.
 
 = Why Ziggeo? =
 
@@ -187,6 +191,10 @@ To show videos you need to have videos on that specific page. This is done to al
 You can also tag your videos in our dashboard with the ID of the page that you want them shown on and voila, refresh your browser and they should be there.
 
 == Changelog ==
+
+= 1.15.1 =
+
+* Housekeeping update
 
 = 1.15 =
 * New Feature: The videowalls now also accept the list of video tokens to be played instead of using the API to find them. Useful if you have a list of tokens that you want to play within some page using some specific videowall design. This is possible to do with `show_pages`, `slide_wall`, `videosite_playlist` and `stripes` (not with `chessboard_grid`, `mosaic_grid`).

@@ -1,11 +1,14 @@
 <?php
 /*
-Plugin Name: Videowalls for Ziggeo
+Plugin Name: VideoWalls for Ziggeo
 Plugin URI: https://ziggeo.com/integrations/wordpress
 Description: Create beautiful and stylish video walls on your posts and pages utilizing powerful Ziggeo video service in the back
 Author: Ziggeo
-Version: 1.15
+Version: 1.15.1
 Author URI: https://ziggeo.com
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Requires Plugins:  ziggeo
 */
 
 //Checking if WP is running or if this is a direct call..
@@ -19,7 +22,7 @@ define('VIDEOWALLSZ_ROOT_PATH', plugin_dir_path(__FILE__) );
 define('VIDEOWALLSZ_ROOT_URL', plugins_url('', __FILE__) . '/');
 
 //plugin version - this way other plugins can get it as well and we will be updating this file for each version change as is
-define('VIDEOWALLSZ_VERSION', '1.15');
+define('VIDEOWALLSZ_VERSION', '1.15.1');
 
 //Include files
 

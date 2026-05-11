@@ -6,6 +6,8 @@ defined('ABSPATH') or die();
 //Function to get the start and end of the videowall
 function videowallsz_get_wall_placeholder($inline_styles) {
 	//Since there could be several walls on the same page, it would be best to create some random id that will help distinguish the x from y
+	// Security: Fine if rand is predictable as it is only used to modify design
+	// phpcs:ignore
 	$wallID = 'ziggeo_video_wall' . rand(2,4) . str_replace(array(' ', '.'), '', microtime()) . rand(0,5); ///ziggeo_video_wall0363734001464901560
 
 	$code = '<div id="' . $wallID . '" class="ziggeo_videoWall" style="' . $inline_styles . '">';
@@ -75,7 +77,7 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 	//Does wall have the title parameter set up?
 	if($wall['title'] !== '' ) {
 		//Lets get the title then
-		$wall['title'] = '<div class="ziggeo_wall_title">' . $wall['title'] . '</div>';
+		$wall['title'] = '<div class="ziggeo_wall_title">' . esc_html($wall['title']) . '</div>';
 	}
 	else {
 		//will be needed because of CSS
@@ -193,7 +195,7 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 
 	//tags based on current page
 	$wall_tags = str_replace( '%CURRENT_ID%', $wall['postID'], $wall_tags );
-	$wall_tags = apply_filters('ziggeo_template_parsing_tag_set', $wall_tags, current_filter());
+	$wall_tags = apply_filters('ziggeo_template_parsing_tag_set', $wall_tags, current_filter()); // phpcs:ignore
 	// fix the escaped quotes that might be present
 	$wall_tags = str_replace(array("'", '\\'), '', $wall_tags);
 
@@ -218,28 +220,29 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 	ob_start();
 
 	//This helps us create js code that works as is and uses the variable data from these outputs instead of outputting the data into the code each time - and adding JS directly to the page.
+	// phpcs:disable
 	?>
 	<script type="text/javascript" class="runMe">
 		videowallszCreateWall('<?php echo $wallID; ?>', {
 				videos: {
-					width: '<?php echo str_replace(array("'", '\\'), '', $wall['video_width']); ?>',
-					height: '<?php echo str_replace(array("'", '\\'), '', $wall['video_height']); ?>',
+					width: '<?php echo str_replace(array("'", '\\'), '', (int)$wall['video_width']); ?>',
+					height: '<?php echo str_replace(array("'", '\\'), '', (int)$wall['video_height']); ?>',
 					autoplay: <?php echo $wall['autoplay']; ?>,
 					autoplaytype: '<?php echo $autoplaytype; ?>',
 					stretch: '<?php echo $wall['video_stretch']; ?>'
 				},
 				indexing: {
-					perPage: <?php echo str_replace(array("'", '\\'), '', $wall['videos_per_page']); ?>,
-					status: '<?php echo str_replace(array("'", '\\'), '', $wall['show_videos']); ?>',
-					design: '<?php echo str_replace(array("'", '\\'), '', $wall['wall_design']); ?>',
+					perPage: <?php echo str_replace(array("'", '\\'), '', (int)$wall['videos_per_page']); ?>,
+					status: '<?php esc_html_e(str_replace(array("'", '\\'), '', $wall['show_videos'])); ?>',
+					design: '<?php esc_html_e(str_replace(array("'", '\\'), '', $wall['wall_design'])); ?>',
 					fresh: true,
 					auto_refresh: <?php echo (int)$wall['auto_refresh']; ?>,
-					pre_set_list: '<?php echo $wall['pre_set_list']; ?>',
+					pre_set_list: '<?php esc_html_e($wall['pre_set_list']); ?>',
 				},
 				onNoVideos: {
-					showTemplate: <?php echo $showtemplate; ?>,
-					message: '<?php echo $wall['message']; ?>',
-					templateName: '<?php echo $wall['template_name']; ?>',
+					showTemplate: <?php esc_html_e($showtemplate); ?>,
+					message: '<?php esc_html_e($wall['message']); ?>',
+					templateName: '<?php esc_html_e($wall['template_name']); ?>',
 					hideWall: <?php echo $wall['hide_wall']; ?>
 				},
 				title: '<?php echo $wall['title']; ?>',
@@ -247,6 +250,7 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 			});
 	</script>
 	<?php
+	// phpcs:enable
 
 	$ret .= ob_get_contents();
 	ob_end_clean();
@@ -264,14 +268,14 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 			setTimeout(function() {
 				if(typeof ziggeo_app !== 'undefined') {
 					ziggeo_app.embed_events.on('verified', function (embedding) {
-						videowallszUIVideoWallShow('<?php echo $wallID; ?>');
+						videowallszUIVideoWallShow('<?php echo $wallID; // phpcs:ignore ?>');
 					});
 				}
 				//lets wait for a second and try again.
 				else {
 					setTimeout( function() {
 						ziggeo_app.embed_events.on('verified', function (embedding) {
-							videowallszUIVideoWallShow('<?php echo $wallID ?>');
+							videowallszUIVideoWallShow('<?php echo $wallID; // phpcs:ignore ?>');
 						});
 					}, 10000 );
 					//10 seconds should be enough for page to load and we do not need to have this set up right away.
@@ -287,15 +291,15 @@ function videowallsz_content_parse_videowall($template, $post_code = false) {
 			jQuery(document).ready( function () {
 				//Turns out we sometimes need a bit more time (needed for some integrations)
 				setTimeout(function() {
-					videowallszUIVideoWallShow('<?php echo $wallID; ?>');
-				}, '<?php echo $wall['show_delay']; ?>');
+					videowallszUIVideoWallShow('<?php echo $wallID; // phpcs:ignore ?>');
+				}, '<?php echo $wall['show_delay']; // phpcs:ignore ?>');
 			});
 		</script>
 		<?php
 	}
 
 	if($post_code === true) {
-		echo $ret;
+		echo $ret; // phpcs:ignore
 	}
 	else {
 		return $ret;

@@ -1,5 +1,9 @@
 <?php
 
+
+//Checking if WP is running or if this is a direct call..
+defined('ABSPATH') or die();
+
 //Function that will always give us the default values of a wall
 function videowallsz_p_wall_defaults() {
 

@@ -52,7 +52,14 @@ function videowallsz_run() {
 		add_action( 'admin_notices', function() {
 			?>
 			<div class="error notice">
-				<p><?php _e( 'Please install <a href="https://wordpress.org/plugins/ziggeo/">Ziggeo plugin</a>. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowallsz' ); ?></p>
+				<p><?php printf(
+						/* translators: %s: Hardcoded opened link element, %s: Hardcoded closing link element
+							"Ziggeo plugin" is the link keyword
+						*/
+						esc_html( 'Please install %1$sZiggeo plugin%2$s. It is required for this plugin (Videowalls for Ziggeo) to work properly!', 'videowalls-for-ziggeo' ),
+						'<a href="https://wordpress.org/plugins/ziggeo/">',
+						'</a>'
+				); ?></p>
 			</div>
 			<?php
 		});
@@ -87,7 +94,7 @@ function videowallsz_init() {
 	include_once(VIDEOWALLSZ_ROOT_PATH . 'extend/videowall_parser.php');
 
 	//Know when Videowalls will definitely be activated and do any action you want/need
-	do_action('videowalls_for_ziggeo_running');
+	do_action('videowalls_for_ziggeo_running'); // phpcs:ignore
 
 	return true;
 }

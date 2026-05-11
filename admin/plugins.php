@@ -12,9 +12,9 @@ add_filter('plugin_action_links_videowalls-for-ziggeo/videowalls-for-ziggeo.php'
 //This is not done in error, this plugin has no settings of its own, all settings are part of Ziggeo dashboard as it extends the code plugin
 function videowallszPPluginsListingMod($links) {
 	$links[] = '<a href="' . esc_url( get_admin_url(null, 'options-general.php?page=ziggeo_video') ) . '">' .
-				_x('Settings', '"Settings" link on the Plugins page', 'ziggeo') . '</a>';
+				_x('Settings', '"Settings" link on the Plugins page', 'videowalls-for-ziggeo') . '</a>';
 	$links[] = '<a href="mailto:support@ziggeo.com">'.
-				_x('Support', '"Support" link on the Plugins page', 'ziggeo') . '</a>';
+				_x('Support', '"Support" link on the Plugins page', 'videowalls-for-ziggeo') . '</a>';
 	return $links;
 }
 ?>
